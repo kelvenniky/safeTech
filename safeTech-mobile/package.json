@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "expo-linear-gradient": "~14.0.2",
+    "expo-location": "^18.0.7",
+    "jwt-decode": "^4.0.0",
+    "react-native-svg": "15.8.0",
+    "react-native-toast-message": "^2.2.1"
+  }
+}

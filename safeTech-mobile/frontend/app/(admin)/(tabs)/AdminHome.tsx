@@ -1,0 +1,362 @@
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Vibration,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import * as Location from "expo-location";
+import WeeklyCalender from "../../../components/WeeklyCalendar";
+import { Link, router } from "expo-router";
+import { useLocationStore } from "@/store";
+
+const AdminHome = () => {
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [address, setAddress] = useState("");
+  const [getEmerg, setGetEmerg] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [isOnline, setIsOnline] = useState(false);
+  const { setUserLocation } = useLocationStore();
+  const [newEmergency, setNewEmergency] = useState(false);
+    const [newEmerg, setNewEmerg] = useState('none')
+  
+
+
+
+  useEffect(() => {
+    const getPermissions = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Location permission not granted.");
+        return;
+      }
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      const address = await Location.reverseGeocodeAsync({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      });
+
+      // Set user location and address
+      setUserLocation({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        address: `${address[0].name}, ${address[0].region}`,
+      });
+
+      await addLocation(currentLocation.coords.latitude, currentLocation.coords.longitude);
+      getAddress(currentLocation.coords.latitude, currentLocation.coords.longitude);
+    };
+    getPermissions();
+  }, []);
+
+  const getAddress = async (latitude: number, longitude: number) => {
+    try {
+      const response = await Location.reverseGeocodeAsync({ latitude, longitude });
+      if (response.length > 0) {
+        const { name, city, region, country } = response[0];
+        const formattedAddress = `${name || ""}, ${city || ""}, ${region || ""}, ${country || ""}`.trim();
+        setAddress(formattedAddress || "Address not found");
+      } else {
+        setAddress("Address not found");
+      }
+    } catch (error) {
+      console.error("Error getting address:", error);
+      Alert.alert("Error", "Unable to retrieve address.");
+    }
+  };
+
+  const addLocation = async (latitude: number, longitude: number) => {
+    const token = await AsyncStorage.getItem("token");
+    const userId = await AsyncStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("User ID not found in AsyncStorage.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://172.20.10.4:5001/add-location/${userId}/location`,
+        {
+          location: { latitude, longitude },
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating location status:", error);
+    }
+  };
+
+  async function getData() {
+    const token = await AsyncStorage.getItem("token");
+    const trimmedToken = token ? token.trim() : null;
+
+    if (!trimmedToken) {
+      console.error("Token is undefined or null");
+      return;
+    }
+
+    axios
+      .post("http://172.20.10.4:5001/userdata", { token: trimmedToken })
+      .then((res) => {
+        const userData = res.data.data;
+        setUserData(userData);
+        // Update user location immediately after getting user data
+        if (userData && userData.location) {
+          setUserLocation({
+            latitude: userData.location.latitude,
+            longitude: userData.location.longitude,
+            address: address,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }
+
+  async function getAllData() {
+    try {
+      const res = await axios.get("http://172.20.10.4:5001/emerg");
+      setGetEmerg(res.data.data);
+    } catch (error) {
+      console.error("Error fetching emergencies:", error);
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (userData) {
+        // Ensure to add the latest location
+        addLocation(userData.location.latitude, userData.location.longitude);
+      }
+      getData();
+      getAllData();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [userData]);
+
+  const updateUserState = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const userId = await AsyncStorage.getItem("userId");
+    const newState = isOnline ? "offline" : "online";
+    if (!token || !userId) {
+      Alert.alert("Error", "User not authenticated.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://172.20.10.4:5001/userState/${userId}/state`,
+        { state: newState },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setIsOnline(!isOnline);
+      Vibration.vibrate();
+      Alert.alert("Success", `You are ${newState} now!`);
+      getData();
+    } catch (error) {
+      console.error("Error updating user state:", error);
+      Alert.alert("Error", "Failed to update user state.");
+    }
+  };
+
+
+    async function getAllUserData() {
+
+      const userId = await AsyncStorage.getItem("userId");
+    try {
+      const res = await fetch(`http://172.20.10.4:5001/my-emergencies?userId=${userId}`);
+      const data = await res.json();
+
+      setGetEmerg(data);
+    
+    } catch (error) {
+      console.error("Error fetching emergencies:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAllData(); 
+
+    const intervalId = setInterval(() => {
+      getAllUserData(); 
+    }, 1000); 
+
+      const pendingEmergencies = getEmerg.filter((emergency: { status: string; }) => emergency.status === "pending");
+    if (pendingEmergencies.length > 0) {
+      setNewEmerg('new')
+    }
+
+    if (pendingEmergencies.length = 0) {
+      setNewEmerg('none')
+    }
+
+    return () => clearInterval(intervalId); 
+  }, []);
+
+
+
+
+
+  return (
+    <SafeAreaView className="h-full bg-white flex">
+        
+      <View className="mx-3">
+        <View className="overflow-x-auto bg-white rounded-md">
+          <WeeklyCalender />
+        </View>
+        <TouchableOpacity
+          onPress={updateUserState}
+          className="mx-auto px-5 py-2 mt-2 flex-row gap-2 items-center rounded-md"
+        >
+          <Text className={`font-bold ${userData?.state === 'online' ? 'text-red-500' : 'text-teal-600'} capitalize text-lg`}>
+            {userData?.state || "Loading"}
+          </Text>
+          <Text>
+            {userData?.state === 'online' ? (
+              <MaterialIcons name="online-prediction" size={24} color="red" className="animate-ping" />
+            ) : (
+              <Ionicons name="cloud-offline-outline" size={24} color="teal" />
+            )}
+          </Text>
+        </TouchableOpacity>
+
+          <View className="w-full py-4 flex  flex-row gap-4">
+            <View className="flex items-center gap-1">
+              <Image source={require("../../../assets/images/med.png")} />
+            </View>
+            <View className="">
+              <Text className="font-bold">{userData?.name || "Loading"}</Text>
+              <Text className="font-bold  text-gray-500">{userData?.email || "Loading"}</Text>
+              <Text className="font-bold text-gray-500">
+                {/* {userData?.location.latitude || "Loading"}/{userData?.location.longitude || "Loading"} */}
+              </Text>
+            </View>
+        </View>
+     
+
+        {newEmerg =='new'  && (
+          <Link href={"/(admin)/(tabs)/Emergency"} className="mt-2 w-full bg-red-50 rounded-md flex-row justify-between">
+            <View className="w-full flex-row items-center justify-between py-6 px-4">
+              <Image source={require("../../../assets/images/off.png")} />
+              <View className="flex flex-wrap w">
+                <Text className="text-lg text-red-500 font-bold">New Emergency</Text>
+                <Text className="text-red-600">You have a new emergency</Text>
+              </View>
+              <View className="flex items-center">
+                <View className="border-2 border-red-600 rounded-full px-3 py-1 animate-bounce">
+                  <Text className="font-bold text-xl text-red-600">1</Text>
+                </View>
+                <Text className="font-bold text-xs text-red-600">Click Here</Text>
+              </View>
+            </View>
+          </Link>
+        ) } 
+        {
+          newEmerg == 'none' && (
+             <Link href={"/(admin)/(tabs)/Emergency"} className="mt-2 w-full bg-teal-50 rounded-md flex-row justify-between">
+            <View className="w-full flex-row items-center justify-between py-6 px-4">
+              <Image source={require("../../../assets/images/okay.png")} />
+              <View className="flex flex-wrap w">
+                <Text className="text-lg text-teal-600 font-bold">You have No New Emergency</Text>
+                <Text className="text-teal-600">No emergencies yet</Text>
+              </View>
+              <View className="flex items-center">
+                <View className="border-2 border-teal-600 rounded-full px-3 py-1 ">
+                  <Text className="font-bold text-xl text-teal-600">0</Text>
+                </View>
+              </View>
+            </View>
+          </Link>
+          )
+        }
+         
+     
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 rounded-md w-full bg-white">
+          <View className="flex-row py-6 gap-4 items-center overflow-x-auto">
+            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-3" onPress={() => router.push("/(admin)/(tabs)/Emergency")}>
+              <Text className="text-teal-800 font-semibold"> Your Emergencies</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-3" onPress={() => router.push("/(admin)/MedicsOnline")}>
+              <Text className="text-teal-800 font-semibold">Medics Online</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-5" onPress={() => router.push("/(admin)/AllEmergencies")}>
+              <Text className="text-teal-800 font-semibold">All Emergencies</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.push("/(admin)/AllConversations")}
+              className="bg-gray-100 rounded-3xl py-2 px-3"
+            >
+              <Text className="text-teal-800 font-semibold">Messages</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+
+        <View>
+          <Link href={"/(admin)/FirstAid"} className="mt-2 w-full flex-row justify-between">
+            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
+              <Image source={require("../../../assets/images/kit.png")} />
+              <View className="flex flex-wrap w">
+                <Text className="text-lg font-bold">Your First Aid Directives</Text>
+                <Text className="text-gray-600">In case you are not sure, check here</Text>
+              </View>
+              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
+                <Text className="font-bold text-xl">40</Text>
+              </View>
+            </View>
+          </Link>
+
+          <Link href={"/(admin)/Summary"} className="mt-2 w-full flex-row justify-between">
+            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
+              <Image source={require("../../../assets/images/sumy.png")} />
+              <View className="flex flex-wrap w">
+                <Text className="text-lg font-bold">Medic Summary</Text>
+                <Text className="text-gray-600">In case you are not sure, check here</Text>
+              </View>
+              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
+                <Text className="font-bold text-xl">M</Text>
+              </View>
+            </View>
+          </Link>
+          <Link href={"/(admin)/AllEmergencies"} className="mt-2 w-full flex-row justify-between">
+            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
+              <Image source={require("../../../assets/images/beat.png")} />
+              <View className="flex flex-wrap w">
+                <Text className="text-lg font-bold">All Emergencies</Text>
+                <Text className="text-gray-600">A total list of all daily emergencies</Text>
+              </View>
+              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
+                <Text className="font-bold text-xl">{getEmerg.length}</Text>
+              </View>
+            </View>
+          </Link>
+        </View>
+        <View className="h-20"></View>
+
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default AdminHome;
+
+const styles = StyleSheet.create({});
