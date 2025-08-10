@@ -45,7 +45,7 @@ const RideLayout = ({
         <View className="flex flex-col h-screen bg-blue-500">
           <View className="flex flex-row absolute z-10 top-16 items-center  gap-5 justify-start px-5 " style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <View className="p-3 bg-teal-600 rounded-full items-center justify-center">
+              <View className="p-3 bg-red-600 rounded-full items-center justify-center">
               <AntDesign name="arrowleft" size={24} color="white" />
               </View>
             </TouchableOpacity>
@@ -64,14 +64,18 @@ const RideLayout = ({
 
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={snapPoints || ["45%", "85%"]}
+          snapPoints={snapPoints || ["50%", "85%"]}
           index={0}
+             handleIndicatorStyle={styles.indicator} // Optional: Customize the handle indicator
+        style={styles.bottomSheet}
         >
           {title === "Choose a Rider" ? (
             <BottomSheetView
               style={{
                 flex: 1,
                 padding: 20,
+                 borderRadius:70,
+                borderWidth:1
               }}
             >
               {children}
@@ -81,6 +85,7 @@ const RideLayout = ({
               style={{
                 flex: 1,
                 padding: 20,
+               
               }}
             >
               {children}
@@ -101,6 +106,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
+  },
+   bottomSheet: {
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    overflow: 'hidden', // Important for rounded edges
+  },
+   indicator: {
+    backgroundColor: 'red',
+    width: 60,
+    borderRadius: 10,
   },
 
 })

@@ -82,13 +82,18 @@ const PersonnelLogin = () => {
 
   return (
     <SafeAreaView className='flex bg-white h-full'>
-    
-        <View className='mx-7 mt-9'  >
-        <TouchableOpacity  onPress={()=> router.replace('/(auth)/Login')}>
-        <Ionicons name="chevron-back" size={24} color="grey" />
+      <TouchableOpacity className="mt-4 mx-7" onPress={() => router.replace("/(auth)/Login")}>
+          <Ionicons name="chevron-back" size={24} color="grey" />
         </TouchableOpacity>
+         <View className="flex items-center  justify-center">
+              <Image source={require('../../assets/images/looo.png')} className="w-32 h-32" />
+            </View>
+
+    
+        <View className='mx-7 mt-4'  >
+       
   
-        <Text className='text-3xl mt-8 font-semibold'>Sign Up As Paramedic</Text>
+        <Text className='text-3xl mt-4 text-center font-semibold'>Sign Up As Security Staff</Text>
   
         
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -99,7 +104,7 @@ const PersonnelLogin = () => {
                  onChange={e=>setSecretText(e.nativeEvent.text)}
                  placeholder="Enter Secret Key"
                  placeholderTextColor="grey"
-                 className='mt-2 bg-[#fafafa] rounded-lg py-4 pl-2'
+                 className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
                   />
     </View>
   
@@ -110,7 +115,7 @@ const PersonnelLogin = () => {
                  onChange={e=>setName(e.nativeEvent.text)}
                  placeholder="Enter your name"
                  placeholderTextColor="grey"
-                 className='mt-2 bg-[#fafafa] rounded-lg py-4 pl-2'
+                 className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
                   />
     </View>
       
@@ -122,7 +127,7 @@ const PersonnelLogin = () => {
                  placeholder="Enter Email Address"
                  placeholderTextColor="grey"
                  keyboardType="email-address" 
-                 className='mt-2 bg-[#fafafa] rounded-lg py-4 pl-2'
+                 className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
                   />
     </View>
   
@@ -135,7 +140,7 @@ const PersonnelLogin = () => {
         placeholder="Enter your Password"
         placeholderTextColor="grey"
         secureTextEntry={!showPassword} 
-        className='mt-2 bg-[#fafafa] rounded-lg py-4 pl-2 pr-10' />
+        className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2 pr-10' />
        <TouchableOpacity
         style={{ position: 'absolute', right: 10, top: 20 }} 
         onPress={() => setShowPassword(!showPassword)} 
@@ -148,7 +153,7 @@ const PersonnelLogin = () => {
   
   
     <View className=' mt-3 flex items-end'>
-       <TouchableOpacity onPress={()=> router.replace('/(auth)/ForgotPassword')}>
+       <TouchableOpacity >
           <Text style={{ fontWeight:'bold' }}>Forgot Password?</Text>
         </TouchableOpacity>
     </View>
@@ -162,7 +167,7 @@ const PersonnelLogin = () => {
            <View className='flex flex-row'>
            <Text>Already have an account? </Text> 
             <TouchableOpacity onPress={()=>router.replace('/(auth)/Login')}>
-              <Text style={{color:"#0d9488", textDecorationLine:'underline'}}>Login Now</Text>
+              <Text style={{color:"#dc2626", textDecorationLine:'underline'}}>Login Now</Text>
           </TouchableOpacity> 
   
           
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
   },
    button:{
      
-     backgroundColor: "#0d9488",
+     backgroundColor: "#dc2626",
      borderRadius: 15,
      padding:15,
      alignItems:"center",

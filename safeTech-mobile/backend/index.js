@@ -15,7 +15,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const mongoUrl =
-  "mongodb+srv://kelvinafutu8as:kev123melvyn@cluster0.yrjyq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://kelvinafutu8as:kev123melvyn@cluster0.z1ijkwl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const JWT_SECRET =
   "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jdsds039[]]pou89ywe";
@@ -34,9 +34,11 @@ mongoose
 
 const Message = require("./message");
 
+
 require("./UserDetails");
 const User = mongoose.model("people");
 const Emergency = require("./emergency"); 
+const Pointer = require("./MapPointers");
 
 
 
@@ -216,54 +218,69 @@ app.post("/userState/:id/state", async (req, res) => {
 
 
 
+app.post("/pointer", async (req, res) => {
+  const { latitude, longitude, type } = req.body; // Destructure from req.body
 
-app.post("/medprofile", authenticateJWT, async (req, res) => {
+  try {
+    await Pointer.create({
+      latitude,
+      longitude,
+      type,
+    });
+    return res.send({ status: "ok", data: "Pointer Created" });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.send({ status: "error", data: error.message });
+  }
+});
+
+app.get("/getPointers", async (req, res) => {
+  try {
+    const pointers = await Pointer.find(); 
+    return res.send({ status: "ok", data: pointers });
+  } catch (error) {
+    console.error("Error fetching pointers:", error);
+    return res.send({ status: "error", data: error.message });
+  }
+});
+
+app.get("/getPosts", async (req, res) => {
+  try {
+const posts = await Pointer.find({type:'security'}); 
+    return res.send({ status: "ok", data: posts });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.send({ status: "error", data: error.message });
+  }
+});
+
+
+app.post("/profile", authenticateJWT, async (req, res) => {
   const {
     token,
     contact,
-    HNO,
-    NOK,
-    econtact,
-    dob,
-    gender,
-    allergies,
-    conditions,
-    blood,
-    sicking
-   
+    studentId,
+    course,
+    residence,
+    year,
   } = req.body;
 
   try {
     const user = jwt.verify(token, JWT_SECRET);
     const currentUserId = user.userId;
 
-    // Log to verify values
-    console.log("Decoded user from token:", user);
-    console.log("User ID:", currentUserId);
+    if (!currentUserId) {
+      return res.status(403).json({
+        message: "Invalid token. User ID not found.",
+        error: true,
+        success: false,
+      });
+    }
 
-    // Prepare the update data
-    const updateData = {
-      contact,
-      HNO,
-      NOK,
-      econtact,
-      dob,
-      gender,
-      allergies,
-    conditions,
-    blood,
-    sicking
-      
-    };
+    const updateData = { contact, studentId, course, residence, year };
 
-    // Update user document and return the updated document
-    const updatedUser = await User.findByIdAndUpdate(
-      currentUserId,
-      updateData,
-      { new: true }
-    );
+    const updatedUser = await User.findByIdAndUpdate(currentUserId, updateData, { new: true });
 
-    // Check if the update was successful
     if (!updatedUser) {
       return res.status(404).json({
         message: "User not found.",
@@ -273,24 +290,20 @@ app.post("/medprofile", authenticateJWT, async (req, res) => {
     }
 
     res.json({
-      message: "Medical profile updated successfully.",
+      message: "Profile updated successfully.",
       data: updatedUser,
       error: false,
       success: true,
     });
   } catch (err) {
+    console.error("Error updating profile:", err);
     res.status(400).json({
-      message:
-        err.message || "An error occurred while updating the medical profile.",
+      message: err.message || "An error occurred while updating the profile.",
       error: true,
       success: false,
     });
   }
 });
-
-
-
-
 
 //emergency request
 app.post("/emergency", authenticateJWT, async (req, res) => {
@@ -543,11 +556,10 @@ app.post("/add-hospLocation/:id/location", async (req, res) => {
 
 
 //endpoint to fetch all users currently logged in apart from medic1 for chats
-app.get("/get-users/:userId", (req, res) => {
+app.get("/get-users/", (req, res) => {
   const loggedInUserId = req.params.userId; 
 
   User.find({ 
-    _id: { $ne: loggedInUserId }, 
     userType: "admin" 
   })
     .then((users) => {

@@ -61,29 +61,7 @@ const TabLayout = () => {
       fontSize: 20,
     },
   
-    headerRight: () => (
-      <View className="flex flex-row items-center gap-2 justify-center mr-5">
-         <TouchableOpacity className="bg-teal-600 p-2 rounded-full" onPress={()=>{router.replace("/(root)/Call")}}>
-          <MaterialCommunityIcons name="phone-outline" size={18} color="white" />
-        </TouchableOpacity>
-       <TouchableOpacity className="flex flex-row items-center gap-2 justify-center relative  " onPress={()=>router.push('/(root)/UserMap')} >
-    <FontAwesome name="bell-o" size={24} color="black"  />
-    <View className="rounded-full bg-red-500 px-2 py-1 top-[-8] left-3  absolute"><Text className="text-white text-xs">2</Text></View>
-    </TouchableOpacity>
-       
-      </View>
-    ),
-    headerLeft: () => (
-      <View className="flex flex-row items-center gap-1 ml-1">
-        <View >
-          <Image
-            source={require("../../../assets/images/ambulance.png")} 
-            style={{width:40, height:40}}
-            resizeMode="contain" 
-          />        </View>
-        <Text className="text-xl font-bold text-red-600">EmerGenZ</Text>
-      </View>
-    ),
+   
   }}
 />
       <Tabs.Screen

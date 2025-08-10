@@ -268,7 +268,7 @@ const UserMap = () => {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#0d9488" />
+        <ActivityIndicator size="large" color="red" />
       </View>
     );
   }
@@ -288,14 +288,20 @@ const UserMap = () => {
       <View>
         {!emergencyRequestDetails && (
           <View className='ml-4'>
-            <Text className='text-2xl font-semibold'>Emergency, Confirm Request ...</Text>
-            <Text className='text-gray-500 text-lg'>Confirm request so a medic will be dispatched</Text>
-            <TouchableOpacity className="w-full mt-5 mx-auto bg-teal-500 rounded-lg flex items-center shadow py-3" onPress={() => handleEmergencyRequest(closestMedicInfo?._id)} >
-              <Text className="text-white text-lg font-semibold">Confirm Request</Text>
+              <View className='flex items-center'>
+              <Image source={require("../../assets/images/looo.png")  }
+              resizeMode="contain" 
+              className="relative w-20 h-20 rounded-full "
+
+           />
+              </View>
+            <Text className='text-2xl text-center font-semibold'>Confirm to send Request....</Text>
+            <TouchableOpacity className="w-full mt-5 mx-auto bg-red-500 rounded-full flex items-center shadow py-4" onPress={() => handleEmergencyRequest(closestMedicInfo?._id)} >
+              <Text className="text-white text-lg font-semibold">Confirm</Text>
             </TouchableOpacity>
             <TouchableOpacity
                         onPress={handleCompleted}
-                        className="w-full mt-3 mx-auto bg-gray-400 rounded-lg flex items-center shadow py-3"
+                        className="w-full mt-3 mx-auto bg-gray-400 rounded-full flex items-center shadow py-4"
                       >
                         <Text className="text-white text-lg font-semibold">
                          Cancel
@@ -306,16 +312,21 @@ const UserMap = () => {
 
         {emergencyRequestDetails && emergencyStatus === "pending" && (
           <View className='gap-2'>
-            <Text className='text-2xl font-semibold'>Connecting to a closeby Paramedic</Text>
-            <Text className='text-gray-500 text-lg'>Request has been sent. Finding you a driver...</Text>
-            <ProgressBar progress={progress} color={MD3Colors.secondary60} className=' bg-teal-500' />
+            <View className='flex items-center'>
+              <Image source={require("../../assets/images/looo.png")  }
+              resizeMode="contain" 
+              className="relative w-20 h-20 rounded-full "
+
+           /></View>
+            <Text className='text-2xl text-center font-semibold'>Connecting to a Security Personnel...</Text>
             <TouchableOpacity
                         onPress={handleCompleted}
-                        className="w-full mt-3 mx-auto bg-gray-400 rounded-lg flex items-center shadow py-3"
+                        className="w-full mt-3 mx-auto bg-gray-400 rounded-full flex items-center shadow py-4"
                       >
                         <Text className="text-white text-lg font-semibold">
                          Cancel
                         </Text>
+                        
             </TouchableOpacity>
 
             
@@ -335,30 +346,30 @@ const UserMap = () => {
 
         {emergencyRequestDetails && emergencyStatus === "accepted" && (
           <View>
-            <Text style={{fontSize:25}} className='text-gray-800 font-semibold'>Connecting to your Paramedic</Text>
-            <Text className='text-gray-500 mt-2 mb-2 text-lg'>Request has been accepted. Found you a medic...</Text>
-            <ProgressBar progress={progress} color={MD3Colors.secondary60} className=' bg-teal-500' />
+            <View className='flex items-center'>
+              <Image source={require("../../assets/images/looo.png")  }
+              resizeMode="contain" 
+              className="relative w-20 h-20 rounded-full "
+
+           />
+              </View>
+            <Text style={{fontSize:20}} className='text-gray-800 text-center mt-4 font-semibold'>Connecting to Security Personnel...</Text>
             <View className='flex-row mt-6 gap-28 mx-auto items-center '>
               <View className='grid items-center gap-2'>
                 <Pressable className="bg-slate-100 rounded-full ">
-                <Image source={require("../../assets/images/male.jpeg")  }
+                <Image source={require("../../assets/icons/sec.png")  }
               resizeMode="contain" 
               className="relative w-20 h-20 rounded-full "
 
            />
            
                 </Pressable>
-                <Text className=''>{closestMedicInfo?.name}</Text>
+                <Text className='font-semibold'>{closestMedicInfo?.name}</Text>
               </View>
-              <View className='grid items-center gap-2'>
-                <Pressable className="bg-slate-100 rounded-full p-6"  onPress={handleCompleted} >
-                  <MaterialCommunityIcons name="car-off" size={30} color="teal" />
-                </Pressable>
-                <Text className=''>Cancel</Text>
-              </View>
+            
             </View>
             <View className='border-t border-gray-200 pt-4 mt-6 flex flex-row items-center gap-2 '>
-            <Ionicons name="location-sharp" size={24} color="teal" />
+            <Ionicons name="location-sharp" size={24} color="red" />
             <Text className='text-lg text-gray-500'>{userAddress}</Text>
             </View>
           </View>
@@ -366,274 +377,117 @@ const UserMap = () => {
 
         {emergencyRequestDetails && emergencyStatus === "dispatched" && (
           <View className='mx-4'>
-            <View className='border-gray-200 pb-6 border-b'>
-              <View className='flex flex-row items-center gap-12'>
-              <Text className='font-bold text-2xl animate-pulse'>Medic is arriving in ~{estimatedTime} min</Text>
-              <Image source={require("../../assets/images/amb.png")  }
+            <View className='flex items-center'>
+              <Image source={require("../../assets/images/looo.png")  }
               resizeMode="contain" 
-              className="relative w-10 h-10  "
+              className="relative w-20 h-20 rounded-full "
+
            />
               </View>
-              <View className='flex-row items-center mt-2 gap-12'>
-                <Text className='text-xl'>{closestMedicInfo?.name}</Text>
-                <View className='bg-gray-100 px-2 rounded-md py-1'>
-                  <Text className='text-lg font-semibold'>{closestMedicInfo?._id}</Text>
-                </View>
+            <View className='border-gray-200 pb-6 border-b'>
+              <View className='flex flex-row items-center '>
+              <Text className='font-bold text-center text-2xl '>Personnel is arriving in ~{estimatedTime} min</Text>
+             
               </View>
+             
             </View>
-            <View className='flex-row mt-6 items-center justify-between'>
+            <View className='flex-row mt-2 items-center justify-between'>
               <View className='grid items-center gap-2'>
               <Pressable className="bg-slate-100 rounded-full ">
-                <Image source={require("../../assets/images/male.jpeg")  }
+                <Image source={require("../../assets/icons/sec.png")  }
               resizeMode="contain" 
               className="relative w-20 h-20 rounded-full "
 
            />
            
                 </Pressable>
-                <Text className='text-gray-600'>{closestMedicInfo?.name}</Text>
+                <Text className='text-gray-600 font-semibold'>{closestMedicInfo?.name}</Text>
               </View>
               <View className='grid items-center gap-2'>
                 <Link href={{
                   pathname: "/(root)/Chatroom",
                   params: { name: closestMedicInfo?.name, receiverId: closestMedicInfo?._id },
                 }} asChild className="bg-slate-100 rounded-full p-4">
-                  <Ionicons name="chatbubble-ellipses" size={35} color="teal" />
+                  <Ionicons name="chatbubble-ellipses" size={35} color="red" />
                 </Link>
-                <Text className='text-gray-600'>Chat</Text>
+                <Text className='text-gray-600 font-semibold'>Chat</Text>
               </View>
               <View className='grid items-center gap-2'>
                 <Pressable className="bg-slate-100 rounded-full p-4">
-                  <MaterialIcons name="call" size={35} color="teal" />
+                  <MaterialIcons name="call" size={35} color="red" />
                 </Pressable>
-                <Text className='text-gray-600'>Call</Text>
+                <Text className='text-gray-600 font-semibold'>Call</Text>
               </View>
             </View>
             <View className='border-t border-gray-200 pt-4 mt-8 flex flex-row items-center gap-2 '>
-            <Ionicons name="location-sharp" size={24} color="teal" />
-            <Text className='text-lg text-gray-500'>{userAddress}</Text>
+            <Ionicons name="location-sharp" size={24} color="red" />
+            <Text className='text-lg text-gray-500 font-semibold'>{userAddress}</Text>
             </View>
           </View>
         )}
 
         {emergencyRequestDetails && emergencyStatus === "arrived" && (
           <View className='mx-4'>
-          <View className='border-gray-200 pb-6 border-b'>
-            <View className='flex flex-row items-center gap-12'>
-            <Text className='font-bold text-2xl animate-pulse'>Your Medic Has Arrived... </Text>
-            <Image source={require("../../assets/images/amb.png")  }
-            resizeMode="contain" 
-            className="relative w-10 h-10  "
-         />
-            </View>
-            <View className='flex-row items-center mt-2 gap-12'>
-              <Text className='text-xl'>{closestMedicInfo?.name}</Text>
-              <View className='bg-gray-100 px-2 rounded-md py-1'>
-                <Text className='text-lg font-semibold'>{closestMedicInfo?._id}</Text>
+             <View className='flex items-center'>
+              <Image source={require("../../assets/images/looo.png")  }
+              resizeMode="contain" 
+              className="relative w-20 h-20 rounded-full "
+
+           />
               </View>
-            </View>
+          <View className='border-gray-200 pb-2 border-b'>
+            <Text className='font-bold text-center text-2xl animate-pulse'>Security is Here.. </Text>
+            
+           
           </View>
           <View className='flex-row mt-6 items-center justify-between'>
             <View className='grid items-center gap-2'>
             <Pressable className="bg-slate-100 rounded-full ">
-              <Image source={require("../../assets/images/male.jpeg")  }
+              <Image source={require("../../assets/icons/sec.png")  }
             resizeMode="contain" 
-            className="relative w-20 h-20 rounded-full "
+            className="relative w-14 h-14 rounded-full "
 
          />
          
               </Pressable>
-              <Text className='text-gray-600'>{closestMedicInfo?.name}</Text>
+              <Text className='text-gray-600 font-semibold'>{closestMedicInfo?.name}</Text>
             </View>
             <View className='grid items-center gap-2'>
               <Link href={{
                 pathname: "/(root)/Chatroom",
                 params: { name: closestMedicInfo?.name, receiverId: closestMedicInfo?._id },
               }} asChild className="bg-slate-100 rounded-full p-4">
-                <Ionicons name="chatbubble-ellipses" size={35} color="teal" />
+                <Ionicons name="chatbubble-ellipses" size={25} color="red" />
               </Link>
-              <Text className='text-gray-600'>Chat</Text>
+              <Text className='text-gray-600 font-semibold'>Chat</Text>
             </View>
             <View className='grid items-center gap-2'>
               <Pressable className="bg-slate-100 rounded-full p-4">
-                <MaterialIcons name="call" size={35} color="teal" />
+                <MaterialIcons name="call" size={25} color="red" />
               </Pressable>
-              <Text className='text-gray-600'>Call</Text>
+              <Text className='text-gray-600 font-semibold'>Call</Text>
             </View>
           </View>
           <View className='border-t border-gray-200 pt-4 mt-8 flex flex-row items-center gap-2 '>
-          <Ionicons name="location-sharp" size={24} color="teal" />
-          <Text className='text-lg text-gray-500'>{userAddress}</Text>
-          </View>
-        </View>
-        )}
-
-        {emergencyRequestDetails && emergencyStatus === "hospital" && (
-          <View className='mx-4'>
-          <View className='border-gray-200 pb-6 border-b'>
-            <View className='flex flex-row items-center gap-4'>
-            <Text className='font-bold text-2xl animate-pulse'> Route to the nearest hospital... </Text>
-              <ActivityIndicator className='text-teal-600'/>
-            </View>
-            <View className='flex-row items-center mt-2 gap-12'>
-              <Text className='text-xl'>{closestMedicInfo?.name}</Text>
-              <View className='bg-gray-100 px-2 rounded-md py-1'>
-                <Text className='text-lg font-semibold'>{closestMedicInfo?._id}</Text>
-              </View>
-            </View>
-          </View>
-          <View className='flex-row mt-6 items-center justify-between'>
-            <View className='grid items-center gap-2'>
-            <Pressable className="bg-slate-100 rounded-full ">
-              <Image source={require("../../assets/images/male.jpeg")  }
-            resizeMode="contain" 
-            className="relative w-20 h-20 rounded-full "
-
-         />
-         
-              </Pressable>
-              <Text className='text-gray-600'>{closestMedicInfo?.name}</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Link href={{
-                pathname: "/(root)/Chatroom",
-                params: { name: closestMedicInfo?.name, receiverId: closestMedicInfo?._id },
-              }} asChild className="bg-slate-100 rounded-full p-4">
-                <Ionicons name="chatbubble-ellipses" size={35} color="teal" />
-              </Link>
-              <Text className='text-gray-600'>Chat</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Pressable className="bg-slate-100 rounded-full p-4">
-                <MaterialIcons name="call" size={35} color="teal" />
-              </Pressable>
-              <Text className='text-gray-600'>Call</Text>
-            </View>
-          </View>
-          <View className='border-t border-gray-200 pt-4 mt-8 flex flex-row items-center gap-2 '>
-          <Ionicons name="location-sharp" size={24} color="teal" />
-          <Text className='text-lg text-gray-500'>{userAddress}</Text>
-          </View>
-        </View>
-        )}
-
-        {emergencyRequestDetails && emergencyStatus === "enroute" && (
-          <View className='mx-4'>
-          <View className='border-gray-200 pb-6 border-b'>
-            <View className='flex flex-row items-center gap-12'>
-            <Text className='font-bold text-2xl animate-pulse'>On Route to the hospital...</Text>
-            <Image source={require("../../assets/images/amb.png")  }
-            resizeMode="contain" 
-            className="relative w-10 h-10  "
-         />
-            </View>
-            <View className='flex-row items-center mt-2 gap-12'>
-              <Text className='text-xl'>{closestMedicInfo?.name}</Text>
-              <View className='bg-gray-100 px-2 rounded-md py-1'>
-                <Text className='text-lg font-semibold'>{closestMedicInfo?._id}</Text>
-              </View>
-            </View>
-          </View>
-          <View className='flex-row mt-4 items-center justify-between'>
-            <View className='grid items-center gap-2'>
-            <Pressable className="bg-slate-100 rounded-full ">
-              <Image source={require("../../assets/images/male.jpeg")  }
-            resizeMode="contain" 
-            className="relative w-20 h-20 rounded-full "
-
-         />
-         
-              </Pressable>
-              <Text className='text-gray-600'>{closestMedicInfo?.name}</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Link href={{
-                pathname: "/(root)/Chatroom",
-                params: { name: closestMedicInfo?.name, receiverId: closestMedicInfo?._id },
-              }} asChild className="bg-slate-100 rounded-full p-4">
-                <Ionicons name="chatbubble-ellipses" size={35} color="teal" />
-              </Link>
-              <Text className='text-gray-600'>Chat</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Pressable className="bg-slate-100 rounded-full p-4">
-                <MaterialIcons name="call" size={35} color="teal" />
-              </Pressable>
-              <Text className='text-gray-600'>Call</Text>
-            </View>
-          </View>
-          <View className="border-t border-gray-200 pt-3 mt-8 flex-row gap-2 ">
-             <Entypo name="location" size={20} color="gray" />
-             <Text className='text-lg text-gray-500'>{emergencyRequestDetails.hospitalAddress}</Text>
-           </View>
-          <View className=' flex flex-row pt-2 items-center gap-2 '>
-          <Ionicons name="location-sharp" size={20} color="teal" />
-          <Text className='text-lg text-gray-500'>{userAddress}</Text>
-          </View>
-        </View>
-        )}
-
-        {emergencyRequestDetails && emergencyStatus === "completed" && (
-          <View className='mx-4'>
-          <View className='border-gray-200 pb-6 border-b'>
-            <View className='flex flex-row items-center gap-12'>
-            <Text className='font-bold text-2xl animate-pulse'>Emergency Completed.</Text>
-            <Ionicons name="checkmark-circle" size={30} color="green" />
-            </View>
-            <View className='flex-row items-center mt-2 gap-12'>
-              <Text className='text-xl font-semibold '>You have arrived at {emergencyRequestDetails.hospitalAddress}... </Text>
-             
-            </View>
-          </View>
-          <View className='flex-row mt-4 items-center justify-between'>
-            <View className='grid items-center gap-2'>
-            <Pressable className="bg-slate-100 rounded-full ">
-              <Image source={require("../../assets/images/male.jpeg")  }
-            resizeMode="contain" 
-            className="relative w-20 h-20 rounded-full "
-
-         />
-         
-              </Pressable>
-              <Text className='text-gray-600'>{closestMedicInfo?.name}</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Link href={{
-                pathname: "/(root)/Chatroom",
-                params: { name: closestMedicInfo?.name, receiverId: closestMedicInfo?._id },
-              }} asChild className="bg-slate-100 rounded-full p-4">
-                <Ionicons name="chatbubble-ellipses" size={35} color="teal" />
-              </Link>
-              <Text className='text-gray-600'>Chat</Text>
-            </View>
-            <View className='grid items-center gap-2'>
-              <Pressable className="bg-slate-100 rounded-full p-4">
-                <MaterialIcons name="call" size={35} color="teal" />
-              </Pressable>
-              <Text className='text-gray-600'>Call</Text>
-            </View>
-          </View>
-         
-          <View className="border-t border-gray-200 pt-3 mt-6 flex-row gap-2 ">
-             <Entypo name="location" size={20} color="gray" />
-             <Text className='text-lg text-gray-500'>{emergencyRequestDetails.hospitalAddress}</Text>
-           </View>
-          <View className=' flex flex-row pt-2 items-center gap-2 '>
-          <Ionicons name="location-sharp" size={20} color="teal" />
+          <Ionicons name="location-sharp" size={24} color="red" />
           <Text className='text-lg text-gray-500'>{userAddress}</Text>
           </View>
           <TouchableOpacity
                         onPress={handleCompleted}
-                        className="w-full mt-3 mx-auto bg-teal-600 rounded-lg flex items-center shadow py-3"
+                        className="w-full mt-3 mx-auto bg-red-600 rounded-full flex items-center shadow py-4"
                       >
                         <Text className="text-white text-lg font-semibold">
                          Done
                         </Text>
             </TouchableOpacity>
         </View>
-        
         )}
 
+     
+
+
+
+  
         
       </View>
     </RideLayout>
@@ -658,6 +512,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   requestDetail: {
-    color: 'black',
+    color: 'red',
   },
 });

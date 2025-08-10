@@ -16,7 +16,7 @@ const EmergencySchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'accepted', 'dispatched', 'arrived', 'hospital','enroute', 'completed'], // Enum values
+        enum: ['pending', 'accepted', 'dispatched', 'arrived', ], // Enum values
         default: 'pending', // Default value
     },
     closestMedicId:{ type: String },

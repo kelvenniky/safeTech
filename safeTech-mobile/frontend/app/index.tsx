@@ -62,7 +62,6 @@ const Index = () => {
   return (
     <SafeAreaView>
       <Toast />
-      <Redirect href={'/SplashScreen'}/>
       {isLoggedIn && userType === "medic" ? (
         <Redirect href={"/(admin)/(tabs)/AdminHome"} />
       ) : isLoggedIn && userType === "user" ? (

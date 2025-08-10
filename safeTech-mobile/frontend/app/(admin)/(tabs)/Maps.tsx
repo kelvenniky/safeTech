@@ -1,142 +1,200 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
-import { useDriverStore, useLocationStore } from '@/store'
-import { calculateRegion, generateMarkersFromData } from '@/lib/map'
-import { MarkerData } from '@/types/types/type'
-import { icons } from '@/constants'
-import MapViewDirections from 'react-native-maps-directions'
-
-
-
-
-const drivers = [
-  {
-      "id": "1",
-      "first_name": "James",
-      "last_name": "Wilson",
-      "profile_image_url": "https://ucarecdn.com/dae59f69-2c1f-48c3-a883-017bcf0f9950/-/preview/1000x666/",
-      "car_image_url": "https://ucarecdn.com/a2dc52b2-8bf7-4e49-9a36-3ffb5229ed02/-/preview/465x466/",
-      "car_seats": 4,
-      "rating": "4.80"
-  },
-  {
-      "id": "2",
-      "first_name": "David",
-      "last_name": "Brown",
-      "profile_image_url": "https://ucarecdn.com/6ea6d83d-ef1a-483f-9106-837a3a5b3f67/-/preview/1000x666/",
-      "car_image_url": "https://ucarecdn.com/a3872f80-c094-409c-82f8-c9ff38429327/-/preview/930x932/",
-      "car_seats": 5,
-      "rating": "4.60"
-  },
-  {
-      "id": "3",
-      "first_name": "Michael",
-      "last_name": "Johnson",
-      "profile_image_url": "https://ucarecdn.com/0330d85c-232e-4c30-bd04-e5e4d0e3d688/-/preview/826x822/",
-      "car_image_url": "https://ucarecdn.com/289764fb-55b6-4427-b1d1-f655987b4a14/-/preview/930x932/",
-      "car_seats": 4,
-      "rating": "4.70"
-  },
-  {
-      "id": "4",
-      "first_name": "Robert",
-      "last_name": "Green",
-      "profile_image_url": "https://ucarecdn.com/fdfc54df-9d24-40f7-b7d3-6f391561c0db/-/preview/626x417/",
-      "car_image_url": "https://ucarecdn.com/b6fb3b55-7676-4ff3-8484-fb115e268d32/-/preview/930x932/",
-      "car_seats": 4,
-      "rating": "4.90"
-  }
-]
+import {
+  Alert,
+  Image,
+  Modal,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import MapSummary from "@/components/MapSummary";
+import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
+import { RadioButton } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import RadioButtonRN from "radio-buttons-react-native";
+import axios from "axios";
+import API_BASE_URL from "@/common/ApiUrl";
 
 const Maps = () => {
+  const [show, setShow] = useState(false);
+  const [showDisplay, setShowDisplay] = useState(false);
+  const[ latitude, setLatitude] = useState("") 
+    const[ longitude, setLongitude] = useState("") 
+        const[ type, setType] = useState("") 
+
+      const [selectedValue, setSelectedValue] = useState('');
 
 
-  const {userLongitude, userLatitude, destinationLongitude, destinationLatitude } = useLocationStore()
 
+  const toggleShow = () => {
+    setShow((prevShow) => !prevShow);
+  };
 
-  const region = calculateRegion({
-      userLongitude, userLatitude, destinationLongitude, destinationLatitude 
-  })
-  const {selectedDriver, setDrivers}= useDriverStore();
-  const [markers, setMarkers] = useState<MarkerData[]>([])
+  const createPointer = () => {
+    setShowDisplay(true);
+  };
 
+  const closeModal = () => {
+    setShowDisplay(false);
+  };
 
-  useEffect(()=>{
-      if(Array.isArray(drivers)){
-          if(!userLatitude || !userLongitude) return;
+  const [modalVisible, setModalVisible] = useState(false);
 
-       
-      }
-  }, [drivers])
-
-return (
-    <MapView 
-  provider={PROVIDER_DEFAULT}
-  mapType="mutedStandard"
-  style={styles.map} 
-  showsUserLocation={true}
-  tintColor='black'
-  showsPointsOfInterest={false}
-  initialRegion={region}
-  userInterfaceStyle="light"
->
-
-{markers.map((marker) => (
-      <Marker
-        key={marker.id}
-        coordinate={{
-          latitude: marker.latitude,
-          longitude: marker.longitude,
-        }}
-        title={marker.title}
-        image={
-          selectedDriver === marker.id ? icons.selectedMarker : icons.marker
-        }
-      />
-    ))}
-
+  const data = [
     {
-      destinationLatitude && destinationLongitude && (
-        <>
-        <Marker
-         key="destination"
-         coordinate={{
-          latitude:destinationLatitude,
-          longitude:destinationLongitude 
-         }}
-         title='Destination'
-         image={icons.pin}
+      label: "Safe Zone", value:'safe'
+    },
+    {
+      label: "Danger Zone", value:'danger'
+    },
+    {
+      label: "Security Post", value:'security'
+    },
+  ];
 
-         />
-         <MapViewDirections
-            origin={{
-              latitude: userLatitude!,
-              longitude: userLongitude!,
-            }}
-            destination={{
-              latitude: destinationLatitude,
-              longitude: destinationLongitude,
-            }}
-            apikey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY}
-            strokeColor="teal"
-            strokeWidth={2}
-          />
-        </>
-      )
+
+  
+
+
+
+  const handleSave = () => {
+    if (!longitude || !latitude || !selectedValue) {
+      Alert.alert("Error", "All fields are required!");
+      return;
     }
-  </MapView>
-)
-}
+
+    const userData = {
+      latitude:latitude,
+      longitude:longitude,
+      type:selectedValue
+    };
+
+    axios.post(`${API_BASE_URL}/pointer`, userData)
+      .then((res) => {
+        Alert.alert("Pointer created successfully");
+        setLatitude('');
+        setLongitude('');
+        setSelectedValue('');
+        console.log('pointer created successfully ', res.data)
+      })
+      .catch((e) => {
+        console.log(e);
+        Alert.alert("Error", "pointer creation failed! Please try again.");
+      });
+  };
+
+  return (
+    <View className="flex-1">
+      <View className="absolute top-16 left-6 z-10 bg-opacity-50">
+        <View className="flex flex-row gap-4 flex-wrap">
+          <View className="flex flex-row p-2 rounded-full shadow-sm bg-white gap-2 items-center">
+            <Image
+              source={require("../../../assets/icons/danger.png")}
+              className="w-5 h-5"
+            />
+            <Text className="font-semibold">Danger Zones</Text>
+          </View>
+          <View className="flex flex-row p-2 rounded-full shadow-sm bg-white gap-2 items-center">
+            <Image
+              source={require("../../../assets/icons/sec.png")}
+              className="w-6 h-6"
+            />
+            <Text className="font-semibold">Security Posts</Text>
+          </View>
+          <TouchableOpacity
+            onPress={toggleShow}
+            className="flex flex-row p-2 rounded-full shadow-sm bg-white gap-2 items-center"
+          >
+            <MaterialCommunityIcons name="dots-grid" size={24} color="black" />
+          </TouchableOpacity>
+          {show && (
+            <TouchableOpacity
+              onPress={createPointer}
+              className="absolute top-16 flex items-center gap-2 shadow-sm rounded-md flex-row w-44 right-10 bg-white p-2 z-10"
+            >
+              <FontAwesome6
+                name="location-crosshairs"
+                size={24}
+                color="black"
+              />
+              <Text className="text-sm font-semibold">Add Pointers</Text>
+            </TouchableOpacity>
+          )}
+          <View className="flex flex-row p-2 rounded-full shadow-sm bg-white gap-2 items-center">
+            <Image
+              source={require("../../../assets/icons/safe.png")}
+              className="w-8 h-8"
+            />
+            <Text className="font-semibold">Safe Zones</Text>
+          </View>
+        </View>
+      </View>
+      <MapSummary />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showDisplay}
+        onRequestClose={closeModal}
+      >
+        <View className="flex-1 justify-center items-center shadow-sm">
+          <View className="bg-white p-6 rounded-md w-3/4">
+            <View className="flex flex-row items-center justify-between">
+              <Text className="text-lg ">Add Map Pointer</Text>
+              <TouchableOpacity
+                onPress={closeModal}
+                className=" p-2  rounded-lg"
+              >
+                <MaterialCommunityIcons name="close" size={24} />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <View className="grid gap-4 ">
+                <View className=" mt-4 gap-4">
+                  <RadioButtonRN
+                    data={data}
+                    activeColor='red'
+                    selectedBtn={(btn) => setSelectedValue(btn.value)}
 
 
-export default Maps
+                  />
 
+                  <TextInput
+                    placeholder="Enter Latitude"
+                    placeholderTextColor={"gray"}
+                    className="border border-gray-400 rounded-xl px-4 py-4"
+                     onChangeText={setLatitude} // Use onChangeText
+                    value={latitude}
+
+                  />
+                  <TextInput
+                    placeholder="Enter Longitude"
+                    placeholderTextColor={"gray"}
+                    className="border border-gray-400 rounded-xl px-4 py-4"
+                     onChangeText={setLongitude} // Use onChangeText
+                    value={longitude}
+
+                  />
+                </View>
+                <TouchableOpacity className="w-full  bg-red-500  shadow-sm   rounded-xl py-4" onPress={handleSave}>
+                  <Text className="text-xl text-center font-semibold text-white">
+                    Save
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
-  map: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 15, 
-    tintColor:'black',
-},
-})
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+});
+
+export default Maps;

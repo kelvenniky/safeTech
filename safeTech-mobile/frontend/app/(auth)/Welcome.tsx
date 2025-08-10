@@ -19,7 +19,7 @@ const Welcome = () => {
         <Swiper ref={swiperRef}
         loop={false}
         dot={<View className="w-[32px] h-[4px] mx-1 bg-[#E2E8F0] rounded-full"/>}
-        activeDot={<View className="w-[32px] h-[4px] mx-1 bg-teal-600 rounded-full"/>}
+        activeDot={<View className="w-[32px] h-[4px] mx-1 bg-red-600 rounded-full"/>}
         onIndexChanged={(index)=>setActiveIndex(index)}
         >
             

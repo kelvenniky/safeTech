@@ -3,9 +3,11 @@ import { Stack } from "expo-router";
 import "react-native-reanimated";
 import { SocketContextProvider } from "@/SocketContext";
 import SocketStatus from "@/components/SocketStatus";
+import { ProfileContextProvider } from "@/components/ProfileContext";
 
 export default function RootLayout() {
   return (
+    <ProfileContextProvider>
     <SocketContextProvider>
       <SocketStatus />
       <Stack>
@@ -16,5 +18,6 @@ export default function RootLayout() {
         <Stack.Screen name="(admin)" options={{ headerShown: false }} />
       </Stack>
     </SocketContextProvider>
+    </ProfileContextProvider>
   );
 }

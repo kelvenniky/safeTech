@@ -27,7 +27,6 @@ const WeeklyCalendar = () => {
 
   return (
     <View className='mt-4 overflow-x-auto'>
-      <Text className='flex mx-auto text-center  font-semibold' style={styles.title}>{formattedDate}</Text>
       <View className='' style={styles.weekContainer}>
         {daysOfWeek.map((day, index) => (
           <TouchableOpacity

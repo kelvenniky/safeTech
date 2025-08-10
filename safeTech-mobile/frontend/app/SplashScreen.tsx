@@ -43,7 +43,7 @@ export default function SplashScreen() {
         ]}
       >
            <Image
-                    source={require("../assets/images/ambulance.png")} 
+                    source={require("../assets/images/looo.png")} 
                     style={{ width: 200, height: 200 }}
                     resizeMode="contain" 
                   />

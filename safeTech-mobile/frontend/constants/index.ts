@@ -34,9 +34,17 @@ import doctor from "@/assets/images/doctorr.png";
 import medteam from "@/assets/images/medical-team.png";
 import health from "@/assets/images/healthcare.png";
 import ambulance from "@/assets/images/ambulance.png";
+import man from "@/assets/images/policeman.png";
+import not from "@/assets/images/notification.png";
+import sos from "@/assets/images/sos.png";
 
+import danger from "@/assets/icons/danger.png";
 import signUpCar from "@/assets/images/signup-car.png";
 import hosp from "@/assets/icons/hosp.png";
+import sec from "@/assets/icons/sec.png";
+import safe from "@/assets/icons/safe.png";
+
+
 
 
 export const images = {
@@ -51,7 +59,10 @@ export const images = {
   doctor,
   medteam,
   health,
-  ambulance
+  ambulance,
+  sos,
+  not,
+  man
 };
 
 export const icons = {
@@ -59,6 +70,8 @@ export const icons = {
   arrowUp,
   backArrow,
   chat,
+  sec,
+  danger,
   checkmark,
   close,
   dollar,
@@ -81,29 +94,27 @@ export const icons = {
   target,
   to,
   hosp,
+  safe
 };
 
 export const onboarding = [
   {
     id: 1,
-    title: "Emergency assistance is just a tap away!",
-    description:
-      "With our app, you can quickly summon an ambulance when every second counts.",
-    image: images.ambulance,
+    title: "Emergency help is just a tap away!",
+    description: "With our app, you can quickly alert campus security when you need assistance.",
+    image: images.sos, // Ensure this is the SOS icon
   },
   {
     id: 2,
-    title: "Meet your emergency response team.",
-    description:
-      "Our dedicated ambulance teams are ready to provide immediate care and support.",
-    image: images.medteam, // Ensure this is the ambulance team image
+    title: "Meet your campus security team.",
+    description: "Our dedicated security personnel are always ready to ensure your safety.",
+    image: images.man, // Ensure this is the campus security team image
   },
   {
     id: 3,
-    title: "Your health matters most.",
-    description:
-      "We prioritize your well-being, connecting you with the right medical services fast.",
-    image: images.health, // Ensure this is the heart image
+    title: "Your safety is our priority.",
+    description: "We are committed to keeping you safe and connected with immediate support.",
+    image: images.not,// Ensure this is the heart image
   },
 ];
 

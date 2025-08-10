@@ -4,7 +4,7 @@
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ambulance.png",
+    "icon": "./assets/images/looo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ambulance.png",
+        "foregroundImage": "./assets/images/looo.png",
         "backgroundColor": "#ffffff"
       }
     },

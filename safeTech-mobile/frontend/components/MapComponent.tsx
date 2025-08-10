@@ -48,7 +48,7 @@ const MapComponent = ({ medics }: { medics: any }) => {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
-            image={icons.marker}
+            image={icons.sec}
           />
         ) : null 
       ))}

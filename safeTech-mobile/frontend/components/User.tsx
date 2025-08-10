@@ -65,9 +65,6 @@ const User: React.FC<UserProps> = ({ item }) => {
     }
   });
 
-  useEffect(() => {
-    console.log("Updated messages:", messages);
-  }, [messages]);
 
 
   return (
