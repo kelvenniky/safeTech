@@ -37,7 +37,7 @@ import BottomSheet, {
           <View className="flex flex-col h-screen bg-blue-500">
             <View className="flex flex-row absolute z-10 top-16 items-center justify-start px-5 " style={styles.header}>
               <TouchableOpacity onPress={() => router.back()}>
-                <View className="p-3 bg-teal-600 rounded-full items-center justify-center">
+                <View className="p-3 bg-red-600 rounded-full items-center justify-center">
                 <AntDesign name="arrowleft" size={24} color="white" />
                 </View>
               </TouchableOpacity>
@@ -50,9 +50,11 @@ import BottomSheet, {
           </View>
   
           <BottomSheet
-            ref={bottomSheetRef}
-            snapPoints={snapPoints || ["45%", "85%"]}
-            index={0}
+              ref={bottomSheetRef}
+          snapPoints={snapPoints || ["50%", "85%"]}
+          index={0}
+             handleIndicatorStyle={styles.indicator} // Optional: Customize the handle indicator
+        style={styles.bottomSheet}
           >
             {title === "Choose a Rider" ? (
               <BottomSheetView
@@ -81,14 +83,24 @@ import BottomSheet, {
   
   export default AdminRideLayout;
   const styles = StyleSheet.create({
-    header: {
-      position: 'absolute',
-      zIndex: 10,
-      top: 64, 
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 16, 
-    },
+  header: {
+    position: 'absolute',
+    zIndex: 10,
+    top: 64, 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+   bottomSheet: {
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    overflow: 'hidden', // Important for rounded edges
+  },
+   indicator: {
+    backgroundColor: 'red',
+    width: 60,
+    borderRadius: 10,
+  },
   
   })
   

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   highlightedDay: {
-    backgroundColor: '#ccfbf1', // Color for the highlighted day
+    backgroundColor: 'red', // Color for the highlighted day
   },
   dayName: {
     fontSize: 12,

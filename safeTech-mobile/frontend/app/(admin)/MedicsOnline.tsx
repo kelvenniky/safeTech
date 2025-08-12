@@ -1,8 +1,9 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import API_BASE_URL from '@/common/ApiUrl';
 import axios from 'axios';
+import { router } from 'expo-router';
 
 
 interface MedicData {
@@ -38,29 +39,25 @@ const MedicsOnline = () => {
   return (
     <View className='h-full'>
       <View className="flex-row bg-white justify-between pb-2 h-32 border-b-2 border-gray-200 items-end">
-        <View className="flex-row gap-32 items-center">
+        <View className="flex-row gap-32 mb-4 items-center px-4">
           <View>
-            <Image
-              source={require("../../assets/images/box.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
+             <Pressable onPress={()=>router.replace('/(admin)/(tabs)/AdminHome')}>
+            <AntDesign name="left" size={25}/>
+          </Pressable>
           </View>
-          <Text className="text-xl font-semibold">Medics Online</Text>
+          <Text className="text-xl font-semibold">Personnels</Text>
         </View>
         <View className="mb-3">
-          <Entypo className="mr-3" name="new-message" size={24} color="black" />
         </View>
       </View>
       <ScrollView className="px-4 bg-white">
       <View className='mt-12'>
       {medics.length > 0 ? (
           medics.map((medic) => (
-            <View key={medic._id} className=" mb-4 bg-white shadow rounded-md py-4 px-4 flex-row gap-4">
+            <View key={medic._id} className=" mb-4 bg-red-100 shadow rounded-full py-4 px-4 flex-row gap-4">
              <View className='grid gap-2 items-center justify-center'>
              <Image
-                source={require("../../assets/images/med.png")}
+                source={require("../../assets/icons/sec.png")}
                 style={styles.gif}
                 resizeMode="contain"
                 className="relative"

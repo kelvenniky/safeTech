@@ -8,6 +8,7 @@ import {
   Linking,
   Vibration,
   Alert,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useEmergencyStore, useLocationStore } from "@/store";
@@ -428,6 +429,7 @@ const Journey = () => {
       const handleCompleted =()=>{
         Completed(emergencyId)
         fetchEmergencyRequestDetails(emergencyId)
+        router.replace('/(admin)/(tabs)/AdminHome')
       }
 
 
@@ -454,7 +456,14 @@ const Journey = () => {
     
   return (
     <AdminRideLayout title="Ride">
-      <View className="">
+      <View className='flex items-center'>
+                    <Image source={require("../../assets/images/looo.png")  }
+                    resizeMode="contain" 
+                    className="relative w-20 h-20 rounded-full "
+      
+                 />
+                    </View>
+      <View className="mt-4">
       {     
         emergencyStatus === 'completed'?(
           <View>
@@ -487,10 +496,7 @@ const Journey = () => {
              <MaterialIcons name="access-time" size={20} color="grey" />
              <Text className="font-semibold mb-3">Duration: {fullTime}</Text>
            </View>
-           <View className="flex-row gap-3">
-             <Entypo name="map" size={20} color="grey" />
-             <Text className="font-semibold mb-3">Distance: {distance}km</Text>
-           </View>
+        
           </View>
         )
         
@@ -499,22 +505,18 @@ const Journey = () => {
 
         {emergencyStatus === "accepted" && (
           <TouchableOpacity
-            className="w-full mt-5 mx-auto bg-blue-500 rounded-lg flex items-center shadow py-3"
+            className="w-full mt-5 mx-auto bg-red-500 rounded-full flex items-center shadow py-3"
             onPress={startJourney}
           >
-            <Text className="text-white text-lg font-semibold">Start Ride</Text>
+            <Text className="text-white text-lg font-semibold">Start </Text>
           </TouchableOpacity>
         )}
 
         {emergencyStatus === "dispatched" && (
           <View>
-            <View className="w-full mt-5 mx-auto bg-gray-100 rounded-lg flex items-center py-3">
-              <Text className="text-lg font-gray font-semibold">
-                Time Remaining : {formatTime(seconds)}
-              </Text>
-            </View>
+        
             <TouchableOpacity
-              className="w-full mt-5 mx-auto bg-teal-600 rounded-lg flex items-center shadow py-3"
+              className="w-full mt-5 mx-auto bg-red-600 rounded-full flex items-center shadow py-3"
               onPress={arrived}
             >
               <Text className="text-white text-lg font-semibold">
@@ -526,284 +528,35 @@ const Journey = () => {
 
         {emergencyStatus === "arrived" && (
           <View>
-            <View className="w-full mt-5 mx-auto bg-gray-100 rounded-lg flex items-center py-3">
+            <View className="w-full mt-5 mx-auto rounded-full flex items-center py-3">
               <Text className="text-lg font-gray font-semibold">
                 You have arrived...
               </Text>
             </View>
             <TouchableOpacity
-             onPress={HospitalRoute} 
-
-              className="w-full mt-5 mx-auto bg-teal-600 rounded-lg flex items-center shadow py-3"
-            >
-              <Text className="text-white text-lg font-semibold">
-                Show route to nearest hospital
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-
-      {emergencyStatus === "hospital" && (
-          <TouchableOpacity onPress={handleRoute}>
-               {showHospital && closestHospital && (
-          <View className="mt-5 p-4 border rounded bg-gray-100">
-            <Text className="text-lg font-bold flex flex-wrap">
-              Closest Hospital: {closestHospital.name}
-            </Text>
-            <View className="  gap-2 ">
-            <Text className="">{closestHospital.vicinity}</Text>
-            {closestHospital.opening_hours && (
-              <Text className="">
-                {closestHospital.opening_hours.open_now
-                  ? "Open Now"
-                  : "Closed"}
-              </Text>
-               )}
-            </View>
-
-           
-
-          </View>
-
-
-
-        )}
-
-
-  
-
-               
-          </TouchableOpacity>
-        )}
-
-        {
-          emergencyStatus ==='enroute' &&(
-             <TouchableOpacity
              onPress={handleCompleted} 
 
-              className="w-full mt-5 mx-auto bg-teal-600 rounded-lg flex items-center shadow py-3"
+              className="w-full mt-5 mx-auto bg-red-600 rounded-full flex items-center shadow py-3"
             >
               <Text className="text-white text-lg font-semibold">
-               Completed
+                Done
               </Text>
             </TouchableOpacity>
-          )
-          
-        }
-
-{
-          emergencyStatus ==='completed' &&(
-             <TouchableOpacity
-             
-              onPress={updateUserState}
-              className="w-full mt-5 mx-auto bg-teal-600 rounded-lg flex items-center shadow py-3"
-            >
-              <Text className="text-white text-lg font-semibold">
-               Done
-              </Text>
-            </TouchableOpacity>
-          )
-          
-        }
+          </View>
+        )}
 
 
 
-        <View className="mt-10 border-t border-gray-200">
-          {loading ? (
-            <ActivityIndicator size="small" color="gray" />
-          ) : userDetails ? (
-            <>
-              <View className="flex py-5 px-5   w-full  rounded-md">
-                <Pressable
-                  className="flex-row items-center justify-between"
-                  onPress={showAll}
-                >
-                  <Text className="text-gray-500 text-sm">
-                    USER INFORMATION
-                  </Text>
-                  <Entypo name="chevron-small-down" size={24} color="black" />
-                </Pressable>
-                {showLow && (
-                  <View className="flex-row gap-4 mt-7">
-                    <View className=" grid gap-4 w-1/2">
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <Ionicons name="person" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">
-                            User Name:
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.name}
-                        </Text>
-                      </View>
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <FontAwesome name="phone" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">Phone:</Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.contact}
-                        </Text>
-                      </View>
+      
 
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <MaterialCommunityIcons
-                            name="human-male-child"
-                            size={15}
-                            color="teal"
-                          />
-                          <Text className="text-sm text-gray-500">
-                            Next of Kin
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.NOK}
-                        </Text>
-                      </View>
 
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <Entypo name="address" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">Address</Text>
-                        </View>
-                        <Text className="text-sm font-bold capitalize ml-6">
-                          {userDetails.HNO}
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="w-1/2 grid gap-4 ">
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <MaterialIcons name="email" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">
-                            User Email:
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.email}
-                        </Text>
-                      </View>
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <FontAwesome6
-                            name="genderless"
-                            size={15}
-                            color="teal"
-                          />
-                          <Text className="text-sm text-gray-500">Gender:</Text>
-                        </View>
-                        <Text className="text-sm font-bold capitalize ml-6">
-                          {userDetails.gender}
-                        </Text>
-                      </View>
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <MaterialIcons
-                            name="contact-emergency"
-                            size={15}
-                            color="teal"
-                          />
-                          <Text className="text-sm text-gray-500">
-                            Em-contact:
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold capitalize ml-6">
-                          {userDetails.econtact}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              </View>
 
-              <View className="flex py-5 px-5  mt-5 border-t border-gray-200  w-full  rounded-md">
-                <Pressable
-                  className="flex-row items-center justify-between"
-                  onPress={showMedAll}
-                >
-                  <Text className="text-gray-500 text-sm">
-                    MEDICAL INFORMATION
-                  </Text>
-                  <Entypo name="chevron-small-down" size={24} color="black" />
-                </Pressable>
-                {showMedLow && (
-                  <View className="flex-row gap-4 mt-7">
-                    <View className=" grid gap-4 w-1/2">
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <Fontisto name="blood" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">
-                            Blood type:
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.blood}
-                        </Text>
-                      </View>
 
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <FontAwesome5
-                            name="allergies"
-                            size={15}
-                            color="teal"
-                          />
-                          <Text className="text-sm text-gray-500">
-                            Allergies
-                          </Text>
-                        </View>
-                        {userDetails.allergies.map((allergy, index) => (
-                          <Text key={index} className="text-sm font-bold ml-6">
-                            {allergy}
-                          </Text>
-                        ))}
-                      </View>
-                    </View>
-                    <View className="w-1/2 grid gap-4 ">
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <FontAwesome5 name="virus" size={15} color="teal" />
-                          <Text className="text-sm text-gray-500">
-                            Sicle Cell Status:
-                          </Text>
-                        </View>
-                        <Text className="text-sm font-bold ml-6">
-                          {userDetails.sickling}
-                        </Text>
-                      </View>
 
-                      <View className="border-gray-300 border  py-3 px-2 rounded-md">
-                        <View className="flex-row gap-2 items-center">
-                          <MaterialIcons
-                            name="health-and-safety"
-                            size={15}
-                            color="teal"
-                          />
-                          <Text className="text-sm text-gray-500">
-                            Health Conditions:
-                          </Text>
-                        </View>
-                        {userDetails.conditions.map((condition, index) => (
-                          <Text key={index} className="text-sm font-bold ml-6">
-                            {condition}
-                          </Text>
-                        ))}
-                      </View>
-                    </View>
-                  </View>
-                )}
-              </View>
-            </>
-          ) : (
-            <Text className="text-lg font-semibold">
-              No user details available
-            </Text>
-          )}
+        <View className="mt-4 border-t border-gray-200">
+       
 
-          <View className="flex flex-row mx-4 border-t border-gray-200 mt-7 py-6 justify-between">
+          <View className="flex flex-row mx-4 border-gray-200 mt-2 mb-6 py-6 justify-between">
             <Link
               href={{
                 pathname: "/(root)/Chatroom",
@@ -815,13 +568,13 @@ const Journey = () => {
               asChild
               className="bg-slate-100 rounded-full p-6"
             >
-              <Ionicons name="chatbubble-ellipses" size={30} color="teal" />
+              <Ionicons name="chatbubble-ellipses" size={30} color="red" />
             </Link>
             <Pressable
               className="bg-slate-100 rounded-full p-6 "
               onPress={handleCall}
             >
-              <MaterialIcons name="call" size={30} color="teal" />
+              <MaterialIcons name="call" size={30} color="red" />
             </Pressable>
           </View>
         </View>

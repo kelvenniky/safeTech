@@ -1,6 +1,7 @@
 import {
   Alert,
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,6 +14,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  AntDesign,
+  Entypo,
+  FontAwesome6,
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
@@ -30,6 +34,8 @@ const AdminHome = () => {
   const { setUserLocation } = useLocationStore();
   const [newEmergency, setNewEmergency] = useState(false);
     const [newEmerg, setNewEmerg] = useState('none')
+      const [showAddress, setShowAddress] = useState(false);
+    
   
 
 
@@ -213,15 +219,50 @@ const AdminHome = () => {
   }, []);
 
 
-
+  const handleShow = () => {
+    setShowAddress(true);
+  };
 
 
   return (
-    <SafeAreaView className="h-full bg-white flex">
+    <SafeAreaView className="h-full bg-white flex ">
+
+     <View className="px-6">
+         <View>
+        {showAddress ? (
+          <View className="mt-6 flex flex-row items-center justify-between border p-2 rounded-xl border-[#A1A5A8]">
+            <Pressable className="flex flex-row gap-2 items-center">
+              <Pressable onPress={handleShow}>
+                <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
+              </Pressable>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 w-full">
+                <Text className="line-clamp-1 text-ellipsis text-[#A1A5A8]  font-semibold text-lg">
+                  {address || "Loading address..."}
+                </Text>
+              </ScrollView>
+              <Pressable onPress={() => setShowAddress(false)}>
+                <AntDesign name="close" size={24} color="#A1A5A8" />
+              </Pressable>
+            </Pressable>
+          </View>
+        ) : (
+          <View className="mt-6 flex flex-row items-center justify-between">
+            <Pressable onPress={handleShow} className="flex flex-row gap-2 items-center">
+              <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
+              <Text className="line-clamp-1 w-9/12 text-ellipsis text-[#A1A5A8] font-semibold text-lg">
+                {address || "Loading address..."}
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => router.replace("/(root)/ProfileScreen")} className="flex flex-row  items-center">
+                     <MaterialIcons name="account-circle" size={40} color="#d9d9d9" className="border-2 border-red-500 rounded-full" />
+             
+            </Pressable>
+          </View>
+        )}
+      </View>
         
       <View className="mx-3">
         <View className="overflow-x-auto bg-white rounded-md">
-          <WeeklyCalender />
         </View>
         <TouchableOpacity
           onPress={updateUserState}
@@ -239,120 +280,62 @@ const AdminHome = () => {
           </Text>
         </TouchableOpacity>
 
-          <View className="w-full py-4 flex  flex-row gap-4">
-            <View className="flex items-center gap-1">
-              <Image source={require("../../../assets/images/med.png")} />
-            </View>
-            <View className="">
-              <Text className="font-bold">{userData?.name || "Loading"}</Text>
-              <Text className="font-bold  text-gray-500">{userData?.email || "Loading"}</Text>
-              <Text className="font-bold text-gray-500">
-                {/* {userData?.location.latitude || "Loading"}/{userData?.location.longitude || "Loading"} */}
-              </Text>
-            </View>
+        <View className=" mt-56">
+            <View className="flex flex-row items-center justify-center gap-6">
+                    <TouchableOpacity
+                     onPress={() => router.replace("/")}
+                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+                   >
+                     <MaterialIcons name="phone-callback" size={35} color="#ef4444" />
+                     <Text className="text-lg font-semibold">Call Logs</Text>
+                   </TouchableOpacity>
+                   <TouchableOpacity
+                     onPress={() => router.replace("/")}
+                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+                   >
+                  <MaterialIcons name="wechat" size={38} color="#ef4444" />
+                     <Text className="text-lg font-semibold">Chat</Text>
+                   </TouchableOpacity>
+                 </View>
+
+                  <View className="flex flex-row mt-6 items-center justify-center gap-6">
+                   <TouchableOpacity
+                     onPress={() => router.replace("/(admin)/Emergencies")}
+                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+                   >
+                    <MaterialIcons name="history" size={30} color="#ef4444" />
+                     <Text className="text-lg font-semibold">Recents</Text>
+                   </TouchableOpacity>
+                     <TouchableOpacity
+                     onPress={() => router.replace("/MedicsOnline")}
+                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+                   >
+                     <MaterialIcons name="person-pin" size={34} color="#ef4444" />
+                     <Text className="text-lg font-semibold">Personnels</Text>
+                   </TouchableOpacity>
+                 </View>
+                  <View className="flex flex-row mt-6 items-center justify-center gap-6">
+                  
+                     <TouchableOpacity
+                     onPress={() => router.replace("/(admin)/Summary")}
+                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+                   >
+                     <Entypo name="text-document" size={30} color="#ef4444" />
+                     <Text className="text-lg font-semibold">Summary</Text>
+                   </TouchableOpacity>
+                 </View>
+
         </View>
      
 
-        {newEmerg =='new'  && (
-          <Link href={"/(admin)/(tabs)/Emergency"} className="mt-2 w-full bg-red-50 rounded-md flex-row justify-between">
-            <View className="w-full flex-row items-center justify-between py-6 px-4">
-              <Image source={require("../../../assets/images/off.png")} />
-              <View className="flex flex-wrap w">
-                <Text className="text-lg text-red-500 font-bold">New Emergency</Text>
-                <Text className="text-red-600">You have a new emergency</Text>
-              </View>
-              <View className="flex items-center">
-                <View className="border-2 border-red-600 rounded-full px-3 py-1 animate-bounce">
-                  <Text className="font-bold text-xl text-red-600">1</Text>
-                </View>
-                <Text className="font-bold text-xs text-red-600">Click Here</Text>
-              </View>
-            </View>
-          </Link>
-        ) } 
-        {
-          newEmerg == 'none' && (
-             <Link href={"/(admin)/(tabs)/Emergency"} className="mt-2 w-full bg-teal-50 rounded-md flex-row justify-between">
-            <View className="w-full flex-row items-center justify-between py-6 px-4">
-              <Image source={require("../../../assets/images/okay.png")} />
-              <View className="flex flex-wrap w">
-                <Text className="text-lg text-teal-600 font-bold">You have No New Emergency</Text>
-                <Text className="text-teal-600">No emergencies yet</Text>
-              </View>
-              <View className="flex items-center">
-                <View className="border-2 border-teal-600 rounded-full px-3 py-1 ">
-                  <Text className="font-bold text-xl text-teal-600">0</Text>
-                </View>
-              </View>
-            </View>
-          </Link>
-          )
-        }
+     
          
      
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 rounded-md w-full bg-white">
-          <View className="flex-row py-6 gap-4 items-center overflow-x-auto">
-            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-3" onPress={() => router.push("/(admin)/(tabs)/Emergency")}>
-              <Text className="text-teal-800 font-semibold"> Your Emergencies</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-3" onPress={() => router.push("/(admin)/MedicsOnline")}>
-              <Text className="text-teal-800 font-semibold">Medics Online</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="bg-gray-100 rounded-3xl py-2 px-5" onPress={() => router.push("/(admin)/AllEmergencies")}>
-              <Text className="text-teal-800 font-semibold">All Emergencies</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => router.push("/(admin)/AllConversations")}
-              className="bg-gray-100 rounded-3xl py-2 px-3"
-            >
-              <Text className="text-teal-800 font-semibold">Messages</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        <View>
-          <Link href={"/(admin)/FirstAid"} className="mt-2 w-full flex-row justify-between">
-            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
-              <Image source={require("../../../assets/images/kit.png")} />
-              <View className="flex flex-wrap w">
-                <Text className="text-lg font-bold">Your First Aid Directives</Text>
-                <Text className="text-gray-600">In case you are not sure, check here</Text>
-              </View>
-              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
-                <Text className="font-bold text-xl">40</Text>
-              </View>
-            </View>
-          </Link>
-
-          <Link href={"/(admin)/Summary"} className="mt-2 w-full flex-row justify-between">
-            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
-              <Image source={require("../../../assets/images/sumy.png")} />
-              <View className="flex flex-wrap w">
-                <Text className="text-lg font-bold">Medic Summary</Text>
-                <Text className="text-gray-600">In case you are not sure, check here</Text>
-              </View>
-              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
-                <Text className="font-bold text-xl">M</Text>
-              </View>
-            </View>
-          </Link>
-          <Link href={"/(admin)/AllEmergencies"} className="mt-2 w-full flex-row justify-between">
-            <View className="bg-white w-full flex-row items-center justify-between py-6 px-4">
-              <Image source={require("../../../assets/images/beat.png")} />
-              <View className="flex flex-wrap w">
-                <Text className="text-lg font-bold">All Emergencies</Text>
-                <Text className="text-gray-600">A total list of all daily emergencies</Text>
-              </View>
-              <View className="border-2 border-teal-600 rounded-full px-2 py-1">
-                <Text className="font-bold text-xl">{getEmerg.length}</Text>
-              </View>
-            </View>
-          </Link>
-        </View>
-        <View className="h-20"></View>
+      
 
       </View>
+     </View>
     </SafeAreaView>
   );
 };

@@ -1,5 +1,6 @@
-import { Entypo, Feather } from "@expo/vector-icons";
+import { AntDesign, Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -9,6 +10,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 
@@ -63,20 +65,15 @@ const SummaryScreen = ({ }) => {
   return (
     <View className=" h-full">
         <View className="flex-row bg-white justify-between pb-2 h-32 border-b-2 border-gray-200 items-end">
-        <View className="flex-row gap-32 items-center">
-          <View>
-            <Image
-              source={require("../../assets/images/mem.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
-            <View className="bg-red-400 rounded-full h-2 w-2 absolute left-11"></View>
+        <View className="flex-row gap-32 mb-4 items-center">
+          <View className="px-4">
+          <Pressable onPress={()=>router.replace('/(admin)/(tabs)/AdminHome')}>
+            <AntDesign name="left" size={25}/>
+          </Pressable>
           </View>
           <Text className="text-xl font-semibold">Medic Summary</Text>
         </View>
         <View className="mb-3">
-          <Entypo className="mr-3" name="new-message" size={24} color="black" />
         </View>
       </View>
       <ScrollView className="px-4 bg-white">

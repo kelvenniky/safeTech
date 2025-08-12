@@ -8,7 +8,7 @@ const Layout = () => {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="AllUsers" options={{ headerShown: false }} />
         <Stack.Screen name="AllConversations" options={{ headerShown: false}} />
-        <Stack.Screen name="CreateDialog" options={{ headerShown: false}} />
+        <Stack.Screen name="Emergencies" options={{ headerShown: false}} />
         <Stack.Screen name="Journey" options={{ headerShown: false}} />
         <Stack.Screen name="FirstAid" options={{ headerShown: false}} />
         <Stack.Screen name="Summary" options={{ headerShown: false}} />

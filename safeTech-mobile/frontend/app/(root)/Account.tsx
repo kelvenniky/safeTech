@@ -57,7 +57,7 @@ useEffect(() => {
                     borderRadius: 20, 
                     padding: 5 
                 }}>
-                    <Ionicons name="cloud-upload" size={20} color="#0d9488" />
+                    <Ionicons name="cloud-upload" size={20} color="red" />
                 </View>
             </View>
           
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   button:{
     width: 370,
-    backgroundColor: "#0d9488",
+    backgroundColor: "red",
     borderRadius: 15,
     padding:15,
     alignItems:"center"
