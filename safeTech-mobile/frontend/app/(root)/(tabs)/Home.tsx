@@ -292,7 +292,7 @@ const handleShare = async () => {
            ):(
             <TouchableOpacity className="border border-[#DEDEDE] flex w-1/2 justify-center items-center rounded-xl gap-2 p-4">
             <MaterialIcons name="wechat" size={38} color="#A1A5A8" />
-            <Text className="text-lg font-semibold">Chat</Text>
+            <Text className="text-lg font-semibold">Report Issue</Text>
           </TouchableOpacity>
            )
           }
@@ -305,8 +305,8 @@ const handleShare = async () => {
             onPress={() => router.replace("/Report")}
             className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl gap-2 p-4"
           >
-            <MaterialIcons name="report" size={35} color="#A1A5A8" />
-            <Text className="text-lg font-semibold">Report</Text>
+            <FontAwesome name="newspaper-o" size={35} color="#A1A5A8" />
+            <Text className="text-lg font-semibold">News</Text>
           </TouchableOpacity>
         </View>
       </View>

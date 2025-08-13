@@ -54,7 +54,7 @@ const MedicsOnline = () => {
       <View className='mt-12'>
       {medics.length > 0 ? (
           medics.map((medic) => (
-            <View key={medic._id} className=" mb-4 bg-red-100 shadow rounded-full py-4 px-4 flex-row gap-4">
+            <View key={medic._id} className=" mb-4 border  border-gray-400 shadow rounded-lg py-4 px-4 flex-row gap-4">
              <View className='grid gap-2 items-center justify-center'>
              <Image
                 source={require("../../assets/icons/sec.png")}

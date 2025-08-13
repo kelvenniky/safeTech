@@ -66,12 +66,7 @@ const Profile = () => {
           <Text style={{ fontSize: 16 }}>{userData?.name || 'Loading'}</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ flexDirection: 'row', marginLeft: 24, marginTop: 10 }}>
-        <TouchableOpacity style={styles.button} onPress={()=>router.replace('/(admin)/MedicProfile')}>
-        <Ionicons name="medical-outline" size={24} color="black" />
-          <Text style={{ fontSize: 16 }}>Medical Profile</Text>
-        </TouchableOpacity>
-      </View>
+    
      
 
       <View style={{ flexDirection: 'row', marginLeft: 24, marginTop: 10 }}>
@@ -106,7 +101,7 @@ const Profile = () => {
       <View style={{ flexDirection: 'row', marginLeft: 24, marginTop: 10 }}>
         <TouchableOpacity style={styles.button}>
           <MaterialIcons name="medical-information" size={24} color="black" />
-          <Text style={{ fontSize: 16 }}>About emerGenZ</Text>
+          <Text style={{ fontSize: 16 }}>About SafeTech</Text>
         </TouchableOpacity>
       </View>
       

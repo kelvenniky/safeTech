@@ -11,6 +11,7 @@ studentId: String,
 course: String,
 residence: String,
 year: String,
+staffID: String,
 userId: { type: String },
 state: {
   type: String,

@@ -162,36 +162,35 @@ const total = getEmerg.length
           </Pressable>
           <Text className="text-xl font-semibold">Requests</Text>
         </View>
-        <View className="mb-3">
-        </View>
+     
       </View>
       <View className="mx-2">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="px-4 py-7 rounded-md w-full mt-1 bg-white"
+          className="px-4 py-4 rounded-md w-full mt-1 "
         >
           <View className="flex-row gap-5 items-center overflow-x-auto">
             <TouchableOpacity
               onPress={() => setSelectedCategory("new")}
-              className={`flex justify-center item-center h-10 rounded-3xl px-5 ${selectedCategory === "new" ? "bg-red-600" : "bg-gray-100"}`}
+              className={`flex justify-center item-center h-10 rounded-3xl px-5 ${selectedCategory === "new" ? " border-b-2 border-red-600" : "bg-gray-100"}`}
             >
-              <Text className={`font-semibold ${selectedCategory === "new" ? "text-white" : "text-red-800"}`}>New</Text>
+              <Text className={`font-semibold ${selectedCategory === "new" ? "" : ""}`}>New</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setSelectedCategory("completed")}
-              className={`flex justify-center item-center h-10 rounded-3xl px-3 ${selectedCategory === "completed" ? "bg-red-600" : "bg-gray-100"}`}
+              className={`flex justify-center item-center h-10 rounded-3xl px-3 ${selectedCategory === "completed" ? "border-b-2 border-red-600" : "bg-gray-100"}`}
             >
-              <Text className={`font-semibold ${selectedCategory === "completed" ? "text-white" : "text-red-800"}`}>Completed</Text>
+              <Text className={`font-semibold ${selectedCategory === "completed" ? "" : ""}`}>Completed</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setSelectedCategory("all")}
-              className={`flex justify-center item-center h-10 rounded-3xl px-6 ${selectedCategory === "all" ? "bg-red-600" : "bg-gray-100"}`}
+              className={`flex justify-center item-center h-10 rounded-3xl px-6 ${selectedCategory === "all" ? "border-b-2 border-red-600" : "bg-gray-100"}`}
             >
-              <Text className={`font-semibold ${selectedCategory === "all" ? "text-white" : "text-red-800"}`}>All</Text>
+              <Text className={`font-semibold ${selectedCategory === "all" ? "" : ""}`}>All</Text>
             </TouchableOpacity>
             <TouchableOpacity className="bg-gray-100 flex justify-center item-center h-10 rounded-3xl px-3" onPress={deleteAcceptedEmergencies}>
-              <Text className="text-red-800 font-semibold">Canceled</Text>
+              <Text className=" font-semibold">Canceled</Text>
             </TouchableOpacity>
           </View>
         
@@ -200,22 +199,22 @@ const total = getEmerg.length
           </View>
 
         <ScrollView className="mt-2">
-          <View className="grid gap-2">
+          <View className="grid gap-4 px-4">
             {filteredEmergencies.map((emergency) => (
               <View
                 key={emergency._id}
-                className="bg-white py-3 rounded-md shadow-lg shadow-slate-300"
+                className="bg-white py-3  border border-red-400 rounded-lg  shadow-lg shadow-slate-300"
               >
-                <View className="p-2 grid gap-4">
+
+                <View className="p-2 grid gap-2 ">
                   <View className="flex-row gap-2 items-center justify-between">
-                    <View className="flex-row gap-2 items-center">
-                      <View className="bg-gray-100 flex items-center justify-center w-9 h-9 rounded-full">
-                        <Ionicons name="person" size={18} color="red" />
-                      </View>
-                      <Text className="font-semibold text-gray-600">
-                        {emergency.userName}-{emergency.status}
-                      </Text>
-                    </View>
+                 
+                    <View className="flex-row items-center gap-1">
+                    <Entypo name="location" size={18} color="red" />
+                    <Text className="font-semibold text-gray-600">
+                      {emergency.address}
+                    </Text>
+                  </View>
                     <Text className="font-semibold text-gray-600">
                       {new Date(emergency.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
@@ -223,20 +222,23 @@ const total = getEmerg.length
                       })}
                     </Text>
                   </View>
+                     <View className="flex-row gap-2 items-center">
+                      <View className=" flex items-center justify-center  rounded-full">
+                        <Ionicons name="person" size={15} color="red" />
+                      </View>
+                      <Text className="font-semibold text-gray-600">
+                        {emergency.userName}-{emergency.status}
+                      </Text>
+                    </View>
                   <View>
      
     </View>
-                  <View className="flex-row items-center gap-1">
-                    <MaterialIcons name="location-pin" size={20} color="red" />
-                    <Text className="font-semibold text-gray-600">
-                      {emergency.address}
-                    </Text>
-                  </View>
+                  
 
                   {emergency.status !== "pending" && 
                     <TouchableOpacity
                       onPress={() => continueDestinationPress(emergency)}
-                      className="w-2/3 mx-auto bg-blue-500 rounded-full flex items-center shadow py-3"
+                      className="w-2/3 mx-auto bg-gray-400 rounded-full flex items-center shadow py-3"
                     >
                       <Text className="text-white text-lg font-semibold">
                         View
@@ -258,7 +260,7 @@ const total = getEmerg.length
               </View>
             ))}
           </View>
-          <View className="h-60"></View>
+          <View className="h-96"></View>
         </ScrollView>
       </View>
     </View>

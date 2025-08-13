@@ -50,6 +50,17 @@ const Profile = () => {
           <Text style={{ fontSize: 16 }}>Account</Text>
         </TouchableOpacity>
       </View>
+
+       <View style={{ marginTop: 20, marginLeft: 30 }}>
+        <Text style={{ fontSize: 20, fontWeight: '600' }}>Support</Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', marginLeft: 24, marginTop: 10 }}>
+        <TouchableOpacity style={styles.button} >
+          <FontAwesome name="phone" size={24} color="black" />
+          <Text style={{ fontSize: 16 }}>Contact Us</Text>
+        </TouchableOpacity>
+      </View>
       
 
     

@@ -14,6 +14,9 @@ const PersonnelLogin = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = useState("");
   const [name, setName] = useState('');
+    const [staffID, setStaffID] = useState('');
+  const [contact, setContact] = useState('');
+
   const[currState, setCurrState] = useState('')
   const [secretText, setSecretText] = useState('');
   const [userType, setUserType] = useState('')
@@ -36,6 +39,8 @@ const PersonnelLogin = () => {
         const userData = {
           name: name,
           email: email,
+          staffID:staffID,
+          contact:contact,
           password: password,
           userType: 'medic' 
         };
@@ -85,9 +90,7 @@ const PersonnelLogin = () => {
       <TouchableOpacity className="mt-4 mx-7" onPress={() => router.replace("/(auth)/Login")}>
           <Ionicons name="chevron-back" size={24} color="grey" />
         </TouchableOpacity>
-         <View className="flex items-center  justify-center">
-              <Image source={require('../../assets/images/looo.png')} className="w-32 h-32" />
-            </View>
+  
 
     
         <View className='mx-7 mt-4'  >
@@ -98,7 +101,7 @@ const PersonnelLogin = () => {
         
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
   
-    <View className='mt-10'>
+    <View className='mt-6'>
     <Text>Secret Key</Text>
       <TextInput value={secretText}
                  onChange={e=>setSecretText(e.nativeEvent.text)}
@@ -109,7 +112,7 @@ const PersonnelLogin = () => {
     </View>
   
   
-    <View className='mt-10'>
+    <View className='mt-6'>
     <Text>Name</Text>
       <TextInput value={name}
                  onChange={e=>setName(e.nativeEvent.text)}
@@ -118,9 +121,29 @@ const PersonnelLogin = () => {
                  className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
                   />
     </View>
+
+    <View className='mt-6'>
+    <Text>Staff ID</Text>
+      <TextInput value={staffID}
+                 onChange={e=>setStaffID(e.nativeEvent.text)}
+                 placeholder="Enter your staff ID"
+                 placeholderTextColor="grey"
+                 className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
+                  />
+    </View>
+
+    <View className='mt-6'>
+    <Text>Contact</Text>
+      <TextInput value={contact}
+                 onChange={e=>setContact(e.nativeEvent.text)}
+                 placeholder="Enter your contact"
+                 placeholderTextColor="grey"
+                 className='mt-2 bg-[#fafafa] border border-red-600 rounded-lg py-4 pl-2'
+                  />
+    </View>
       
     
-    <View className='mt-10'>
+    <View className='mt-6'>
     <Text>Email Address</Text>
       <TextInput value={email}
                  onChange={e=>setEmail(e.nativeEvent.text)}
@@ -131,7 +154,7 @@ const PersonnelLogin = () => {
                   />
     </View>
   
-    <View className='mt-10'>
+    <View className='mt-6'>
       <Text>Password</Text>
       <View className='relative'>
        <TextInput
@@ -158,12 +181,12 @@ const PersonnelLogin = () => {
         </TouchableOpacity>
     </View>
   
-     <View className='mt-10' >
+     <View className='mt-6' >
         <TouchableOpacity onPress={handleSignUpSubmit} style={styles.button}>
           <Text style={{color:'white', fontSize:18, fontWeight:'bold'}}>Sign Up</Text>
         </TouchableOpacity>
       </View> 
-      <View className='mt-10 flex  items-center' >
+      <View className='mt-6 flex  items-center' >
            <View className='flex flex-row'>
            <Text>Already have an account? </Text> 
             <TouchableOpacity onPress={()=>router.replace('/(auth)/Login')}>

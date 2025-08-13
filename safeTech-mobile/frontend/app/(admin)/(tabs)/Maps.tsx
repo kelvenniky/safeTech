@@ -137,8 +137,8 @@ const Maps = () => {
         visible={showDisplay}
         onRequestClose={closeModal}
       >
-        <View className="flex-1 justify-center items-center shadow-sm">
-          <View className="bg-white p-6 rounded-md w-3/4">
+        <View className="flex-1 shadow-2xl justify-center items-center mb-80 ">
+          <View className="bg-white py-4 px-6 rounded-md w-3/4">
             <View className="flex flex-row items-center justify-between">
               <Text className="text-lg ">Add Map Pointer</Text>
               <TouchableOpacity
@@ -150,7 +150,7 @@ const Maps = () => {
             </View>
             <View>
               <View className="grid gap-4 ">
-                <View className=" mt-4 gap-4">
+                <View className="  gap-4">
                   <RadioButtonRN
                     data={data}
                     activeColor='red'

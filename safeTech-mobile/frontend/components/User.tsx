@@ -77,7 +77,7 @@ const User: React.FC<UserProps> = ({ item }) => {
     >
     <TouchableOpacity className="border  border-[#DEDEDE] flex justify-center items-center rounded-xl gap-2 p-4 ">
             <MaterialIcons name="wechat" size={38} color="#EF3649" />
-            <Text className="text-lg font-semibold ">Chat</Text>
+            <Text className="text-lg font-semibold ">Report </Text>
           </TouchableOpacity>
     </Link>
   );

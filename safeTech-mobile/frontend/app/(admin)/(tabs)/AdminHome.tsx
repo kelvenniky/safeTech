@@ -26,19 +26,17 @@ import { Link, router } from "expo-router";
 import { useLocationStore } from "@/store";
 
 const AdminHome = () => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const [address, setAddress] = useState("");
   const [getEmerg, setGetEmerg] = useState([]);
   const [userData, setUserData] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
   const { setUserLocation } = useLocationStore();
   const [newEmergency, setNewEmergency] = useState(false);
-    const [newEmerg, setNewEmerg] = useState('none')
-      const [showAddress, setShowAddress] = useState(false);
-    
-  
-
-
+  const [newEmerg, setNewEmerg] = useState("none");
+  const [showAddress, setShowAddress] = useState(false);
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -61,18 +59,29 @@ const AdminHome = () => {
         address: `${address[0].name}, ${address[0].region}`,
       });
 
-      await addLocation(currentLocation.coords.latitude, currentLocation.coords.longitude);
-      getAddress(currentLocation.coords.latitude, currentLocation.coords.longitude);
+      await addLocation(
+        currentLocation.coords.latitude,
+        currentLocation.coords.longitude
+      );
+      getAddress(
+        currentLocation.coords.latitude,
+        currentLocation.coords.longitude
+      );
     };
     getPermissions();
   }, []);
 
   const getAddress = async (latitude: number, longitude: number) => {
     try {
-      const response = await Location.reverseGeocodeAsync({ latitude, longitude });
+      const response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
       if (response.length > 0) {
         const { name, city, region, country } = response[0];
-        const formattedAddress = `${name || ""}, ${city || ""}, ${region || ""}, ${country || ""}`.trim();
+        const formattedAddress = `${name || ""}, ${city || ""}, ${
+          region || ""
+        }, ${country || ""}`.trim();
         setAddress(formattedAddress || "Address not found");
       } else {
         setAddress("Address not found");
@@ -184,158 +193,239 @@ const AdminHome = () => {
     }
   };
 
-
-    async function getAllUserData() {
-
-      const userId = await AsyncStorage.getItem("userId");
+  async function getAllUserData() {
+    const userId = await AsyncStorage.getItem("userId");
     try {
-      const res = await fetch(`http://172.20.10.4:5001/my-emergencies?userId=${userId}`);
+      const res = await fetch(
+        `http://172.20.10.4:5001/my-emergencies?userId=${userId}`
+      );
       const data = await res.json();
 
       setGetEmerg(data);
-    
     } catch (error) {
       console.error("Error fetching emergencies:", error);
     }
   }
 
   useEffect(() => {
-    getAllData(); 
+    getAllData();
 
     const intervalId = setInterval(() => {
-      getAllUserData(); 
-    }, 1000); 
+      getAllUserData();
+    }, 1000);
 
-      const pendingEmergencies = getEmerg.filter((emergency: { status: string; }) => emergency.status === "pending");
+    const pendingEmergencies = getEmerg.filter(
+      (emergency: { status: string }) => emergency.status === "pending"
+    );
     if (pendingEmergencies.length > 0) {
-      setNewEmerg('new')
+      setNewEmerg("new");
     }
 
-    if (pendingEmergencies.length = 0) {
-      setNewEmerg('none')
+    if ((pendingEmergencies.length = 0)) {
+      setNewEmerg("none");
     }
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(intervalId);
   }, []);
-
 
   const handleShow = () => {
     setShowAddress(true);
   };
 
+const today = new Date(); // Set to June 10, 2023
+const currentWeekStart = today.getDate() - today.getDay(); // Get the start of the week (Sunday)
+
+const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+  const date = new Date(today); // Create a new Date instance for each day
+  date.setDate(currentWeekStart + i); // Set the date to the specific day of the week
+  return {
+    dayName: date.toLocaleString('default', { weekday: 'short' }),
+    day: date.getDate().toString(),
+    isToday: date.toDateString() === today.toDateString(), // Check if it's today
+  };
+});
+
+const formattedDate = today.toLocaleDateString('default', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric', // Add year to the formatted date
+});
+
+
 
   return (
     <SafeAreaView className="h-full bg-white flex ">
-
-     <View className="px-6">
-         <View>
-        {showAddress ? (
-          <View className="mt-6 flex flex-row items-center justify-between border p-2 rounded-xl border-[#A1A5A8]">
-            <Pressable className="flex flex-row gap-2 items-center">
-              <Pressable onPress={handleShow}>
-                <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
+      <View className="px-6">
+        <View>
+          {showAddress ? (
+            <View className="mt-6 flex flex-row items-center justify-between border p-2 rounded-xl border-[#A1A5A8]">
+              <Pressable className="flex flex-row gap-2 items-center">
+                <Pressable onPress={handleShow}>
+                  <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
+                </Pressable>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  className="px-4 w-full"
+                >
+                  <Text className="line-clamp-1 text-ellipsis text-[#A1A5A8]  font-semibold text-lg">
+                    {address || "Loading address..."}
+                  </Text>
+                </ScrollView>
+                <Pressable onPress={() => setShowAddress(false)}>
+                  <AntDesign name="close" size={24} color="#A1A5A8" />
+                </Pressable>
               </Pressable>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 w-full">
-                <Text className="line-clamp-1 text-ellipsis text-[#A1A5A8]  font-semibold text-lg">
+            </View>
+          ) : (
+            <View className="mt-6 flex flex-row items-center justify-between">
+              <Pressable
+                onPress={handleShow}
+                className="flex flex-row gap-2 items-center"
+              >
+                <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
+                <Text className="line-clamp-1 w-9/12 text-ellipsis text-[#A1A5A8] font-semibold text-lg">
                   {address || "Loading address..."}
                 </Text>
-              </ScrollView>
-              <Pressable onPress={() => setShowAddress(false)}>
-                <AntDesign name="close" size={24} color="#A1A5A8" />
               </Pressable>
-            </Pressable>
-          </View>
-        ) : (
-          <View className="mt-6 flex flex-row items-center justify-between">
-            <Pressable onPress={handleShow} className="flex flex-row gap-2 items-center">
-              <FontAwesome6 name="location-dot" size={26} color="#A1A5A8" />
-              <Text className="line-clamp-1 w-9/12 text-ellipsis text-[#A1A5A8] font-semibold text-lg">
-                {address || "Loading address..."}
-              </Text>
-            </Pressable>
-            <Pressable onPress={() => router.replace("/(root)/ProfileScreen")} className="flex flex-row  items-center">
-                     <MaterialIcons name="account-circle" size={40} color="#d9d9d9" className="border-2 border-red-500 rounded-full" />
-             
-            </Pressable>
-          </View>
-        )}
-      </View>
-        
-      <View className="mx-3">
-        <View className="overflow-x-auto bg-white rounded-md">
+              <Pressable
+                onPress={() => router.replace("/(admin)/AdminProfile")}
+                className="flex flex-row  items-center"
+              >
+                <MaterialIcons
+                  name="account-circle"
+                  size={40}
+                  color="#d9d9d9"
+                  className="border-2 border-red-500 rounded-full"
+                />
+              </Pressable>
+            </View>
+          )}
         </View>
-        <TouchableOpacity
-          onPress={updateUserState}
-          className="mx-auto px-5 py-2 mt-2 flex-row gap-2 items-center rounded-md"
-        >
-          <Text className={`font-bold ${userData?.state === 'online' ? 'text-red-500' : 'text-teal-600'} capitalize text-lg`}>
-            {userData?.state || "Loading"}
-          </Text>
-          <Text>
-            {userData?.state === 'online' ? (
-              <MaterialIcons name="online-prediction" size={24} color="red" className="animate-ping" />
-            ) : (
-              <Ionicons name="cloud-offline-outline" size={24} color="teal" />
+
+        <View className="mx-3">
+          <View className="overflow-x-auto bg-white rounded-md"></View>
+          <TouchableOpacity
+            onPress={updateUserState}
+            className="mx-auto px-5 py-2 mt-2 flex-row gap-2 items-center rounded-md"
+          >
+            <Text
+              className={`font-bold ${
+                userData?.state === "online" ? "text-red-500" : "text-grey-400"
+              } capitalize text-lg`}
+            >
+              {userData?.state || "Loading"}
+            </Text>
+            <Text>
+              {userData?.state === "online" ? (
+                <MaterialIcons
+                  name="wifi"
+                  size={24}
+                  color="red"
+                  className="animate-ping"
+                />
+              ) : (
+            <MaterialIcons name="error-outline" size={24} color="grey" />                  )}
+            </Text>
+          </TouchableOpacity>
+          <View className="mt-10" >
+            <Text className="text-center text-lg font-semibold">{formattedDate}</Text>
+          </View>
+
+          <View className="mt-6">
+            {newEmerg == "new" && (
+              <Link
+                href={"/(admin)/Emergencies"}
+                className="mt-2 w-full bg-red-50 rounded-md flex-row justify-between"
+              >
+                <View className="w-full flex-row items-center justify-between py-6 px-4">
+                  <MaterialIcons name="security" size={30} color="red" />
+                  <View className="flex flex-wrap w">
+                    <Text className="text-lg text-red-500 font-bold">
+                      New Emergency
+                    </Text>
+                    <Text className="text-red-600">
+                      You have a new emergency
+                    </Text>
+                  </View>
+                  <View className="flex items-center">
+                    <View className="border-2 border-red-600 rounded-full px-3 py-1 animate-bounce">
+                      <Text className="font-bold text-xl text-red-600">1</Text>
+                    </View>
+                    <Text className="font-bold text-xs text-red-600">
+                      Click Here
+                    </Text>
+                  </View>
+                </View>
+              </Link>
             )}
-          </Text>
-        </TouchableOpacity>
+            {newEmerg == "none" && (
+              <Link
+                href={"/(admin)/Emergencies"}
+                className="mt-2 w-full bg-gray-50 border border-red-100 rounded-lg flex-row justify-between"
+              >
+                <View className="w-full flex-row items-center justify-between py-6 px-4">
+                  <MaterialIcons name="security" size={30} color="gray" />
+                  <View className="flex flex-wrap w">
+                    <Text className="text-lg text-gray-600 font-bold">
+                      No Request Available
+                    </Text>
+                    <Text className="text-gray-600">Click to check here</Text>
+                  </View>
+                  <View className="flex items-center">
+                    <View className="border-2 border-gray-600 rounded-full px-3 py-1 ">
+                      <Text className="font-bold text-xl text-gray-600">0</Text>
+                    </View>
+                  </View>
+                </View>
+              </Link>
+            )}
+          </View>
 
-        <View className=" mt-56">
+          <View className=" mt-16">
             <View className="flex flex-row items-center justify-center gap-6">
-                    <TouchableOpacity
-                     onPress={() => router.replace("/")}
-                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
-                   >
-                     <MaterialIcons name="phone-callback" size={35} color="#ef4444" />
-                     <Text className="text-lg font-semibold">Call Logs</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity
-                     onPress={() => router.replace("/")}
-                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
-                   >
-                  <MaterialIcons name="wechat" size={38} color="#ef4444" />
-                     <Text className="text-lg font-semibold">Chat</Text>
-                   </TouchableOpacity>
-                 </View>
+              <TouchableOpacity
+                onPress={() => router.replace("/")}
+                className="border w-1/2 border-red-600 bg-red-50 flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+              >
+                <MaterialIcons
+                  name="phone-callback"
+                  size={35}
+                  color="#ef4444"
+                />
+                <Text className="text-lg font-semibold">Call Logs</Text>
+              </TouchableOpacity>
+            </View>
 
-                  <View className="flex flex-row mt-6 items-center justify-center gap-6">
-                   <TouchableOpacity
-                     onPress={() => router.replace("/(admin)/Emergencies")}
-                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
-                   >
-                    <MaterialIcons name="history" size={30} color="#ef4444" />
-                     <Text className="text-lg font-semibold">Recents</Text>
-                   </TouchableOpacity>
-                     <TouchableOpacity
-                     onPress={() => router.replace("/MedicsOnline")}
-                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
-                   >
-                     <MaterialIcons name="person-pin" size={34} color="#ef4444" />
-                     <Text className="text-lg font-semibold">Personnels</Text>
-                   </TouchableOpacity>
-                 </View>
-                  <View className="flex flex-row mt-6 items-center justify-center gap-6">
-                  
-                     <TouchableOpacity
-                     onPress={() => router.replace("/(admin)/Summary")}
-                     className="border w-1/2 border-[#DEDEDE] flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
-                   >
-                     <Entypo name="text-document" size={30} color="#ef4444" />
-                     <Text className="text-lg font-semibold">Summary</Text>
-                   </TouchableOpacity>
-                 </View>
-
+            <View className="flex flex-row mt-6 items-center justify-center gap-6">
+              <TouchableOpacity
+                onPress={() => router.replace("/(admin)/Emergencies")}
+                className="border w-1/2 border-red-600 bg-red-50 flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+              >
+                <MaterialIcons name="history" size={30} color="#ef4444" />
+                <Text className="text-lg font-semibold">Requests</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => router.replace("/MedicsOnline")}
+                className="border w-1/2 border-red-600 bg-red-50 flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+              >
+                <MaterialIcons name="person-pin" size={34} color="#ef4444" />
+                <Text className="text-lg font-semibold">Personnels</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="flex flex-row mt-6 items-center justify-center gap-6">
+              <TouchableOpacity
+                onPress={() => router.replace("/(admin)/Summary")}
+                className="border w-1/2 border-red-600 bg-red-50 flex justify-center items-center rounded-xl  gap-2 px-4 py-6"
+              >
+                <Entypo name="text-document" size={30} color="#ef4444" />
+                <Text className="text-lg font-semibold">Summary</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-     
-
-     
-         
-     
-
-      
-
       </View>
-     </View>
     </SafeAreaView>
   );
 };

@@ -71,7 +71,7 @@ const SummaryScreen = ({ }) => {
             <AntDesign name="left" size={25}/>
           </Pressable>
           </View>
-          <Text className="text-xl font-semibold">Medic Summary</Text>
+          <Text className="text-xl font-semibold">Data Visualization</Text>
         </View>
         <View className="mb-3">
         </View>
@@ -79,41 +79,21 @@ const SummaryScreen = ({ }) => {
       <ScrollView className="px-4 bg-white">
       <View className="mt-10 bg-white shadow rounded-md py-4 px-4  flex-row justify-between">
             
-            <Image
-              source={require("../../assets/images/progress.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
-            <Text className=" text-xl font-semibold">{total} Total Emergencies</Text>
+           <Entypo name="text-document" size={24} color="red" />
+            <Text className=" text-xl font-semibold">{total} Total Requests</Text>
         </View>
         <View className="mt-2 bg-white shadow rounded-md py-4 px-4 flex-row justify-between">
-        <Image
-              source={require("../../assets/images/progress.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
-            <Text className=" text-xl font-semibold">{totalCompleted} Completed Emergencies</Text>
+       <Entypo name="text-document" size={24} color="red" />
+            <Text className=" text-xl font-semibold">{totalCompleted} Completed Requests</Text>
         </View>
         <View className="mt-2 bg-white shadow rounded-md py-4 px-4 flex-row justify-between">
-        <Image
-              source={require("../../assets/images/progress.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
-            <Text className=" text-xl font-semibold">{totalCancelled} Cancelled Emergencies</Text>
+       <Entypo name="text-document" size={24} color="red" />
+            <Text className=" text-xl font-semibold">{totalCancelled} Cancelled Requests</Text>
         </View>
         <TouchableOpacity onPress={toggleShowLow} className="mt-2 bg-white shadow rounded-md py-4 px-4 flex-row justify-between">
-        <Image
-              source={require("../../assets/images/progress.png")}
-              style={styles.gif}
-              resizeMode="contain"
-              className="relative"
-            />
-            <Text className=" text-xl font-bold">All  Emergencies</Text>
-            <Feather name="chevron-right" size={24} color="black" />
+       <Entypo name="text-document" size={24} color="red" />
+            <Text className=" text-xl font-bold">All  Requests</Text>
+            <Feather name="chevron-right" size={24} color="red" />
         </TouchableOpacity>
    {
     showLow &&(
@@ -121,22 +101,10 @@ const SummaryScreen = ({ }) => {
         {
             emergencies.map((emergency)=>{
                 return(
-                    <View key={emergency._id} className="bg-white shadow px-4 flex-row items-center gap-2 py-4">
-                       < Image
-                                source={{
-                                  uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=900&center=lonlat:${emergency.location.longitude},${emergency.location.latitude}&zoom=14&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
-                                }}
-                                style={{
-                                  marginRight: 10,
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: 10,
-                                }}
-                                
-                              />
+                    <View key={emergency._id} className="bg-white shadow px-4 flex-row items-center gap-4 py-4">
+                     <MaterialIcons name="document-scanner" size={24} color="black" />
                         <View>
                         <Text className="text-gray-600 font-semibold">{emergency.userName} / {emergency.userEmail}</Text>
-                        <Text className="text-gray-600 font-semibold">{emergency.createdAt}</Text>
                         <Text className="text-gray-600 font-semibold">Status: {emergency.status}</Text>
                         </View>
 

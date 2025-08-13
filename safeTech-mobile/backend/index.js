@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 
 //register
 app.post("/register", async (req, res) => {
-  const { name, email, password, userType } = req.body;
+  const { name, email, password, userType, staffID, contact } = req.body;
   console.log(req.body);
 
   const oldUser = await User.findOne({ email: email });
@@ -69,7 +69,10 @@ app.post("/register", async (req, res) => {
       location:{
         latitude:"",
         longitude:""
-      }
+      },
+      staffID:staffID,
+      contact:contact,
+
     });
     res.send({ status: "ok", data: "User Created" });
   } catch (error) {

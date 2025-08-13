@@ -14,7 +14,7 @@ const Layout = () => {
         <Stack.Screen name="Summary" options={{ headerShown: false}} />
         <Stack.Screen name="MedicsOnline" options={{ headerShown: false}} />
         <Stack.Screen name="AllEmergencies" options={{ headerShown: false}} />\
-        <Stack.Screen name="MedicProfile" options={{ headerShown: false }} />
+        <Stack.Screen name="AdminProfile" options={{ headerShown: false }} />
 
 
 

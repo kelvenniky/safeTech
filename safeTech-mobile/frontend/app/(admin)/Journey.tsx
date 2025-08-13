@@ -54,10 +54,9 @@ const Journey = () => {
   const { setEmergencyStatus, emergencyStatus } = useEmergencyStore();
   const [closestHospital, setClosestHospital] = useState(null);
   const [showHospital, setShowHospital] = useState(false);
-  const [hospitalName, setHospitalName] = useState('');
-  const [started, setStarted] =useState('')
-  const [emergencyData, setEmergencyData] =useState([])
-
+  const [hospitalName, setHospitalName] = useState("");
+  const [started, setStarted] = useState("");
+  const [emergencyData, setEmergencyData] = useState([]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -100,11 +99,11 @@ const Journey = () => {
       await axios.post(
         `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
         {
-          status: "dispatched", 
+          status: "dispatched",
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -112,9 +111,6 @@ const Journey = () => {
       console.error("Error updating emergency status:", error.response.data);
     }
   };
-
-
-  
 
   const destLat = destinationLocation?.latitude;
   const destLong = destinationLocation?.longitude;
@@ -162,20 +158,20 @@ const Journey = () => {
   const distance = dist.toFixed(2);
 
   const timeInHours = distance / averageSpeed;
-  const timeInMinutes = timeInHours * 60; 
+  const timeInMinutes = timeInHours * 60;
 
-  let fullTime; 
+  let fullTime;
 
   if (timeInHours >= 1) {
-    fullTime = timeInHours.toFixed(2) + " hours"; 
+    fullTime = timeInHours.toFixed(2) + " hours";
   } else {
     const timeInMinutes = timeInHours * 60;
-    fullTime = timeInMinutes.toFixed(2) + " minutes"; 
+    fullTime = timeInMinutes.toFixed(2) + " minutes";
   }
 
   const startJourney = () => {
     const timeInHours = distance / averageSpeed;
-    const fullTimeInMinutes = timeInHours * 60; 
+    const fullTimeInMinutes = timeInHours * 60;
     const initialSeconds = Math.round(fullTimeInMinutes * 60);
     setSeconds(initialSeconds);
     setDispatched(true);
@@ -185,18 +181,14 @@ const Journey = () => {
       message: "Ride Started!",
       description: "Your ride has now begun.",
       type: "success",
-      duration:1000, 
+      duration: 1000,
     });
-
-
   };
-
 
   const updateUserState = async () => {
     const token = await AsyncStorage.getItem("token");
     const userId = await AsyncStorage.getItem("userId");
-    const newState = 'online'
-  
+    const newState = "online";
 
     try {
       await axios.post(
@@ -207,14 +199,13 @@ const Journey = () => {
         }
       );
       Alert.alert("Success", `You are ${newState} now!`);
-      router.replace('/(admin)/(tabs)/AdminHome')
-      console.log(newState)
+      router.replace("/(admin)/(tabs)/AdminHome");
+      console.log(newState);
     } catch (error) {
       console.error("Error updating user state:", error);
       Alert.alert("Error", "Failed to update user state.");
     }
   };
-
 
   useEffect(() => {
     fetchEmergencyRequestDetails(emergencyId);
@@ -240,12 +231,12 @@ const Journey = () => {
   const arrived = () => {
     handleArrived(emergencyId);
     Vibration.vibrate();
-    playSound()
+    playSound();
     showMessage({
       message: "You have arrived!",
       description: "You have arrived at your destination.",
       type: "success",
-      duration: 1000, 
+      duration: 1000,
     });
   };
 
@@ -256,27 +247,7 @@ const Journey = () => {
       await axios.post(
         `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
         {
-          status: "arrived", 
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Error updating emergency status:", error.response.data);
-    }
-  };
-
-  const handleHospital = async (emergencyId: number | null) => {
-    const token = await AsyncStorage.getItem("token");
-  
-    try {
-      await axios.post(
-        `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
-        {
-          status: "hospital",
+          status: "arrived",
         },
         {
           headers: {
@@ -284,20 +255,10 @@ const Journey = () => {
           },
         }
       );
-      Vibration.vibrate();
-
     } catch (error) {
       console.error("Error updating emergency status:", error.response.data);
     }
   };
-
-  const HospitalRoute =()=>{
-    handleHospital(emergencyId)
-    fetchClosestHospital()
-  }
-
-
-
 
   const fetchEmergencyRequestDetails = async (emergencyId: any) => {
     try {
@@ -305,203 +266,85 @@ const Journey = () => {
         `${API_BASE_URL}/get-emergency/${emergencyId}`
       );
 
-      const data = response.data
-      setEmergencyData(data)
+      const data = response.data;
+      setEmergencyData(data);
       setEmergencyStatus(response.data.status);
-
-      
     } catch (error) {
       console.error("Error fetching emergency request details:", error);
     }
   };
 
-      const playSound = async () => {
-        const { sound } = await Audio.Sound.createAsync(
-          require('../../assets/bell.mp3') 
-        );
-        setSound(sound);
-        await sound.playAsync();
-        return () => {
-          sound && sound.unloadAsync(); 
-        };
-      };
-  
-      
+  const playSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../assets/bell.mp3")
+    );
+    setSound(sound);
+    await sound.playAsync();
+    return () => {
+      sound && sound.unloadAsync();
+    };
+  };
 
-      const fetchClosestHospital = async () => {
-        const apiKey = "AIzaSyBDaZ67TyUKT7oIH99zjJ80UXC7n5wLMvE"; 
-        const location = `${userLatitude},${userLongitude}`;
-        const radius = 5000; // 5 km
-    
-        try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=hospital&key=${apiKey}`
-          );
-          if (response.data.results.length > 0) {
-            setClosestHospital(response.data.results[0]);
-            setShowHospital(true);
+  const handleCompleted = () => {
+    Completed(emergencyId);
+    fetchEmergencyRequestDetails(emergencyId);
+    router.replace("/(admin)/(tabs)/AdminHome");
+  };
 
+  const Completed = async (emergencyId: number | null) => {
+    const token = await AsyncStorage.getItem("token");
 
-
-
-    
-          } else {
-            showMessage({
-              message: "No hospitals found nearby.",
-              type: "info",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching hospitals:", error);
-          showMessage({
-            message: "Error fetching hospitals.",
-            type: "danger",
-          });
+    try {
+      await axios.post(
+        `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
+        {
+          status: "completed",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      };
+      );
+    } catch (error) {
+      console.error("Error updating emergency status:", error.response.data);
+    }
+  };
 
-
-      const handleRoute = () => {
-        if (closestHospital) {
-          const hospitalLocation = {
-            latitude: closestHospital.geometry.location.lat,
-            longitude: closestHospital.geometry.location.lng,
-            address: closestHospital.name, 
-            userId: destinationLocation.userId,
-            eId: emergencyId,
-            route:'hospital'
-          };
-          
-          setDestinationLocation(hospitalLocation);
-          updateHospitalStatus(emergencyId);
-          addHospitalLocation(emergencyId, closestHospital.name, {
-            latitude: hospitalLocation.latitude,
-            longitude: hospitalLocation.longitude,
-          }); 
-        }
-      };
-
-
-
-      const addHospitalLocation = async (emergencyId: any, hospitalAddress: any, hospitalLocation: any) => {
-        try {
-          const response = await axios.post(
-            `http://172.20.10.4:5001/add-hospLocation/${emergencyId}/location`,
-            {
-              hospitalAddress,
-              hospitalLocation: {
-                latitude: hospitalLocation.latitude,
-                longitude: hospitalLocation.longitude,
-              },
-            }
-          );
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error adding location:", error);
-        }
-      };
-
-
-
-
-
-      const updateHospitalStatus = async (emergencyId: number | null) => {
-        const token = await AsyncStorage.getItem("token");
-    
-        try {
-          await axios.post(
-            `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
-            {
-              status: "enroute", 
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, 
-              },
-            }
-          );
-        } catch (error) {
-          console.error("Error updating emergency status:", error.response.data);
-        }
-      };
-
-
-      const handleCompleted =()=>{
-        Completed(emergencyId)
-        fetchEmergencyRequestDetails(emergencyId)
-        router.replace('/(admin)/(tabs)/AdminHome')
-      }
-
-
-      const Completed = async (emergencyId: number | null) => {
-        const token = await AsyncStorage.getItem("token");
-    
-        try {
-          await axios.post(
-            `http://172.20.10.4:5001/emergency/${emergencyId}/status`,
-            {
-              status: "completed", 
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, 
-              },
-            }
-          );
-        } catch (error) {
-          console.error("Error updating emergency status:", error.response.data);
-        }
-      };
-    
-    
   return (
     <AdminRideLayout title="Ride">
-      <View className='flex items-center'>
-                    <Image source={require("../../assets/images/looo.png")  }
-                    resizeMode="contain" 
-                    className="relative w-20 h-20 rounded-full "
-      
-                 />
-                    </View>
+      <View className="flex items-center">
+        <Image
+          source={require("../../assets/images/looo.png")}
+          resizeMode="contain"
+          className="relative w-20 h-20 rounded-full "
+        />
+      </View>
       <View className="mt-4">
-      {     
-        emergencyStatus === 'completed'?(
+        {emergencyStatus === "completed" ? (
           <View>
-          <View className="flex-row gap-2 mx-2">
-             <Entypo name="location-pin" size={24} color="grey" />
-             <Text className="font-semibold mb-3">
-               Pickup : {emergencyData?.address}
-             </Text>
-             
-           </View>
-           <View className="flex-row gap-2 mx-2">
-             <Entypo name="location" size={24} color="grey" />
-             <Text className="font-semibold mb-3">
-               hospital: {emergencyData?.hospitalAddress}
-             </Text>
-             
-           </View>
-         
+            <View className="flex-row gap-2 mx-2">
+              <Entypo name="location-pin" size={24} color="grey" />
+              <Text className="font-semibold mb-3">
+                Pickup : {emergencyData?.address}
+              </Text>
+            </View>
+            
           </View>
-        ):
-        (
+        ) : (
           <View>
-          <View className="flex-row gap-2">
-             <Entypo name="location-pin" size={24} color="grey" />
-             <Text className="font-semibold mb-3">
-               {destinationLocation.address}
-             </Text>
-           </View>
-           <View className="flex-row gap-3">
-             <MaterialIcons name="access-time" size={20} color="grey" />
-             <Text className="font-semibold mb-3">Duration: {fullTime}</Text>
-           </View>
-        
+            <View className="flex-row gap-2">
+              <Entypo name="location-pin" size={24} color="grey" />
+              <Text className="font-semibold mb-3">
+                {destinationLocation.address}
+              </Text>
+            </View>
+            <View className="flex-row gap-3">
+              <MaterialIcons name="access-time" size={20} color="grey" />
+              <Text className="font-semibold mb-3">Duration: {fullTime}</Text>
+            </View>
           </View>
-        )
-        
-         
-      }
+        )}
 
         {emergencyStatus === "accepted" && (
           <TouchableOpacity
@@ -514,7 +357,6 @@ const Journey = () => {
 
         {emergencyStatus === "dispatched" && (
           <View>
-        
             <TouchableOpacity
               className="w-full mt-5 mx-auto bg-red-600 rounded-full flex items-center shadow py-3"
               onPress={arrived}
@@ -534,28 +376,15 @@ const Journey = () => {
               </Text>
             </View>
             <TouchableOpacity
-             onPress={handleCompleted} 
-
+              onPress={handleCompleted}
               className="w-full mt-5 mx-auto bg-red-600 rounded-full flex items-center shadow py-3"
             >
-              <Text className="text-white text-lg font-semibold">
-                Done
-              </Text>
+              <Text className="text-white text-lg font-semibold">Done</Text>
             </TouchableOpacity>
           </View>
         )}
 
-
-
-      
-
-
-
-
-
         <View className="mt-4 border-t border-gray-200">
-       
-
           <View className="flex flex-row mx-4 border-gray-200 mt-2 mb-6 py-6 justify-between">
             <Link
               href={{
